@@ -1235,9 +1235,9 @@ const HEADER_LOGO = "logo.png";
 
 */
 
-const HEADER_LOGO = "Hadia-Product-Logo.jpg";
-const VOUCHER_LOGO = "Hadia-Product-Logo.jpg";
-const AI_LOGO = "Hadia-Product-AI-Logo.png";
+const HEADER_LOGO = "logo.png";
+const VOUCHER_LOGO = "voucher-logo.png";
+const AI_LOGO = "ai-logo.png";
 
 /* AUTO APPLY */
 
@@ -1284,6 +1284,57 @@ window.addEventListener('DOMContentLoaded',()=>{
       object-fit:cover;
       border-radius:50%">`;
 
+  }
+
+});
+</script>
+
+
+<script>
+/* =========================
+   CUSTOM GITHUB BACKGROUNDS
+   ========================= */
+
+const MAIN_BG = "bg.jpg";
+const LOGIN_BG = "login-bg.jpg";
+const AI_BG = "ai-bg.jpg";
+
+/* AUTO APPLY BACKGROUNDS */
+
+window.addEventListener('DOMContentLoaded',()=>{
+
+  // MAIN WEBSITE BACKGROUND
+  if(MAIN_BG){
+      document.body.style.backgroundImage =
+      `url('${MAIN_BG}')`;
+
+      document.body.style.backgroundSize = 'cover';
+      document.body.style.backgroundPosition = 'center';
+      document.body.style.backgroundAttachment = 'fixed';
+  }
+
+  // LOGIN PAGE BACKGROUND
+  const loginPage = document.getElementById('page-login');
+
+  if(loginPage && LOGIN_BG){
+
+      loginPage.style.backgroundImage =
+      `url('${LOGIN_BG}')`;
+
+      loginPage.style.backgroundSize = 'cover';
+      loginPage.style.backgroundPosition = 'center';
+  }
+
+  // AI CHAT BACKGROUND
+  const aiBox = document.querySelector('.ai-chat-wrap, .ai-box, .ai-panel');
+
+  if(aiBox && AI_BG){
+
+      aiBox.style.backgroundImage =
+      `url('${AI_BG}')`;
+
+      aiBox.style.backgroundSize = 'cover';
+      aiBox.style.backgroundPosition = 'center';
   }
 
 });
