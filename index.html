@@ -1222,5 +1222,72 @@ function adminLogout(){
 }
 </script>
 
+
+<script>
+/* =========================
+   CUSTOM GITHUB LOGO PATHS
+   =========================
+
+লাইন গুলো পরিবর্তন করলেই GitHub এর Logo কাজ করবে
+
+Example:
+const HEADER_LOGO = "logo.png";
+
+*/
+
+const HEADER_LOGO = "logo.png";
+const VOUCHER_LOGO = "voucher-logo.png";
+const AI_LOGO = "ai-logo.png";
+
+/* AUTO APPLY */
+
+window.addEventListener('DOMContentLoaded',()=>{
+
+  // HEADER LOGO
+  const hdrLogo = document.getElementById('logoImgEl');
+
+  if(hdrLogo && HEADER_LOGO){
+
+      hdrLogo.src = HEADER_LOGO;
+      hdrLogo.style.display = 'block';
+
+      const svg = document.getElementById('logoSvgDefault');
+
+      if(svg){
+         svg.style.display = 'none';
+      }
+
+  }
+
+  // VOUCHER LOGO
+  const vWrap = document.getElementById('vLogoWrap');
+
+  if(vWrap && VOUCHER_LOGO){
+
+      vWrap.innerHTML =
+      `<img src="${VOUCHER_LOGO}"
+      style="width:100%;
+      height:100%;
+      object-fit:contain">`;
+
+  }
+
+  // AI LOGO
+  const aiBtn = document.querySelector('.ai-btn');
+
+  if(aiBtn && AI_LOGO){
+
+      aiBtn.innerHTML =
+      `<img src="${AI_LOGO}"
+      style="width:100%;
+      height:100%;
+      object-fit:cover;
+      border-radius:50%">`;
+
+  }
+
+});
+</script>
+
 </body>
 </html>
