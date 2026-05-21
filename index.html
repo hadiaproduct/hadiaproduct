@@ -230,7 +230,30 @@ nav button.act::after{content:'';position:absolute;bottom:4px;left:50%;transform
 .foot-copy{font-size:11px;color:#444;font-weight:500}
 .g-btn{background:var(--gr);color:#fff;border:none;padding:12px 26px;border-radius:25px;cursor:pointer;font-weight:700;font-size:14px;box-shadow:0 4px 14px rgba(233,30,140,.28);transition:.2s}
 .g-btn:hover{opacity:.88;transform:translateY(-1px)}.g-btn-sm{padding:9px 18px;font-size:13px}
-@media(max-width:600px){nav{display:none}.prod-grid{grid-template-columns:repeat(2,1fr)}.con-links{grid-template-columns:1fr}.srch-wrap input{width:80px}.det-grid{grid-template-columns:1fr}.dash-grid{grid-template-columns:repeat(2,1fr)}.ai-window{width:calc(100vw - 48px);right:24px}.trust-grid{gap:8px;padding:10px 12px}.trust-emoji{font-size:22px;margin-bottom:4px}.trust-lbl{font-size:9px}.hero h1{font-size:26px}}
+
+@media(max-width:600px){
+nav{display:none}
+.prod-grid{grid-template-columns:repeat(2,1fr)}
+.con-links{grid-template-columns:1fr}
+.hdr-r{gap:8px;width:100%;justify-content:flex-end}
+.srch-wrap{
+flex:1;
+max-width:170px;
+margin:0 6px;
+padding:5px 8px 5px 10px;
+border-radius:18px
+}
+.srch-wrap input{width:100%;font-size:12px}
+.srch-btn{width:24px;height:24px}
+.det-grid{grid-template-columns:1fr}
+.dash-grid{grid-template-columns:repeat(2,1fr)}
+.ai-window{width:calc(100vw - 32px);right:16px}
+.trust-grid{gap:8px;padding:10px 12px}
+.trust-emoji{font-size:22px;margin-bottom:4px}
+.trust-lbl{font-size:9px}
+.hero h1{font-size:26px}
+}
+
 input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 </style>
 
@@ -1513,6 +1536,63 @@ window.addEventListener('DOMContentLoaded',()=>{
    }
 
 });
+</script>
+
+
+<style>
+.ai-hdr-icon img,.ai-btn img{
+width:100%;
+height:100%;
+object-fit:cover;
+border-radius:50%;
+}
+</style>
+
+<script>
+window.READY_PRODUCT_TEMPLATE = {
+ id:"product-id",
+ name:"Product Name",
+ category:"Category",
+ price:1000,
+ oldPrice:1200,
+ stock:10,
+ mainImage:"https://example.com/main.jpg",
+ images:[
+   "https://example.com/1.jpg",
+   "https://example.com/2.jpg"
+ ],
+ tags:[
+   "phone",
+   "মোবাইল",
+   "smartphone"
+ ],
+ variants:{
+   Color:["Black","Red","Blue","কালো"],
+   Size:["M","L","XL"]
+ },
+ description:"Product Description"
+};
+
+window.smartColorMap = {
+red:"#ff0000",blue:"#0066ff",green:"#00aa55",black:"#111111",white:"#ffffff",
+yellow:"#ffd400",pink:"#ff4da6",purple:"#7e22ce",orange:"#ff6a00",
+কালো:"#111111",সাদা:"#ffffff",লাল:"#ff0000",নীল:"#0066ff",সবুজ:"#00aa55",
+হলুদ:"#ffd400",গোলাপি:"#ff4da6",বেগুনি:"#7e22ce",কমলা:"#ff6a00"
+};
+
+window.aiTrainingData = JSON.parse(localStorage.getItem('aiTrainingData')||'[]');
+
+function saveAITraining(q,a){
+  aiTrainingData.push({q:q,a:a});
+  localStorage.setItem('aiTrainingData',JSON.stringify(aiTrainingData));
+}
+
+window.aiNotFoundMessage = `
+<div style="line-height:1.8">
+দুঃখিত এই পণ্যটি আমাদের কাছে নেই তবে আপনি আমাদের ফেসবুক পেযে যোগাযোগ করে দেখতে পারেন বা আমাদের হোয়াটসাপে নক দিয়ে জেনে নিতে পারেন<br><br>
+<a href="https://www.facebook.com/hadiaproduct0" target="_blank" style="display:inline-flex;align-items:center;gap:6px;background:#1877f2;color:#fff;padding:8px 12px;border-radius:12px;text-decoration:none;margin-right:6px">Facebook</a>
+<a href="https://wa.me/8801867591785" target="_blank" style="display:inline-flex;align-items:center;gap:6px;background:#25d366;color:#fff;padding:8px 12px;border-radius:12px;text-decoration:none">WhatsApp</a>
+</div>`;
 </script>
 
 </body>
