@@ -1416,7 +1416,7 @@ function processAI(q){
   const isHi=/হ্যালো|hello|hi|আস্স|সালাম|assalam/.test(ql);
 
   if(isHi){
-    return `আস্সালামু আলাইকুম! 👋 আমি Hadia Product AI।<br><br>আমি কয়েক সেকেন্ডে পুরো ওয়েবসাইটের পণ্য, ক্যাটাগরি আর তথ্য খুঁজে দিতে পারি। ভুল বানান, বাংলা-ইংরেজি মিশ্র লেখা, আর আনুমানিক নামও বুঝে উত্তর দেব।`;
+    return `আস্সালামু আলাইকুম! 👋 আমি Hadia Product AI,<br><br>আমি কয়েক সেকেন্ডে পুরো ওয়েবসাইটের পণ্য, ক্যাটাগরি আর তথ্য খুঁজে দিতে পারি।`;
   }
   const trainHit=searchAITraining(q);
   if(trainHit&&trainHit.answer){return `<strong>💡 ${trainHit.question}:</strong><br><br>${trainHit.answer}`;}
@@ -1594,7 +1594,7 @@ window.addEventListener('DOMContentLoaded',()=>{
   if(vWrap && VOUCHER_LOGO){
 
       vWrap.innerHTML =
-      `<img src="${VOUCHER_LOGO}"
+      `<img src="Hadia-Product-Logo.jpg"
       style="width:100%;
       height:100%;
       object-fit:contain">`;
