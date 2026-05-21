@@ -277,12 +277,30 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 }
 </style>
 
+
+<style>
+/* UI UPGRADES */
+.ai-hdr-icon img{width:24px;height:24px;object-fit:contain;display:block}
+.foot-brand{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap}
+.foot-logo{width:34px;height:34px;object-fit:contain;border-radius:8px;display:block}
+@media(max-width:600px){
+  .hdr-r{flex:1;min-width:0;gap:8px}
+  .srch-wrap{flex:1;min-width:0;padding:7px 10px 7px 12px}
+  .srch-wrap input{width:100%;font-size:14px}
+  .srch-btn{width:30px;height:30px}
+  .cart-btn{width:40px;height:40px}
+  .logo-svg-wrap{width:42px;height:42px}
+  .logo-img-el{width:42px;height:42px}
+  header{padding:0 12px}
+}
+</style>
+
 </head>
 <body>
 
 <!-- VOUCHER TEMPLATE -->
 <div id="vTpl" style="position:fixed;left:-9999px;top:0;width:560px;background:#fff;font-family:'Segoe UI',Tahoma,Arial,sans-serif;display:none">
-  <div style="background:linear-gradient(135deg,#e91e8c,#f44336);padding:22px 26px;display:flex;align-items:center;gap:14px">
+  <div style="background:linear-gradient(135deg,#111,#4b4b4b);padding:22px 26px;display:flex;align-items:center;gap:14px">
     <div id="vLogoWrap" style="width:56px;height:56px;background:#fff;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden">
       <!-- Logo injected by JS -->
     </div>
@@ -296,11 +314,11 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
   <div style="background:#f8f9fc;border-left:4px solid #e91e8c;margin:16px;border-radius:10px;padding:14px 16px">
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
       <div><div style="font-size:9px;color:#9ca3af;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">অর্ডার নম্বর</div><div id="v-id" style="font-size:14px;font-weight:800;color:#e91e8c"></div></div>
-      <div><div style="font-size:9px;color:#9ca3af;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">তারিখ</div><div id="v-date" style="font-size:12px;font-weight:600;color:#1a1a2e"></div></div>
-      <div><div style="font-size:9px;color:#9ca3af;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">গ্রাহকের নাম</div><div id="v-name" style="font-size:12px;font-weight:600;color:#1a1a2e"></div></div>
-      <div><div style="font-size:9px;color:#9ca3af;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">ফোন নম্বর</div><div id="v-phone" style="font-size:12px;font-weight:600;color:#1a1a2e"></div></div>
-      <div style="grid-column:1/-1"><div style="font-size:9px;color:#9ca3af;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">ঠিকানা</div><div id="v-addr" style="font-size:12px;font-weight:600;color:#1a1a2e"></div></div>
-      <div><div style="font-size:9px;color:#9ca3af;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">পেমেন্ট পদ্ধতি</div><div id="v-pay" style="font-size:12px;font-weight:600;color:#1a1a2e"></div></div>
+      <div><div style="font-size:9px;color:#9ca3af;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">Date</div><div id="v-date" style="font-size:10px;font-weight:600;color:#1a1a2e"></div></div>
+      <div><div style="font-size:9px;color:#9ca3af;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">গ্রাহকের নাম</div><div id="v-name" style="font-size:10px;font-weight:600;color:#1a1a2e"></div></div>
+      <div><div style="font-size:9px;color:#9ca3af;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">ফোন নম্বর</div><div id="v-phone" style="font-size:10px;font-weight:600;color:#1a1a2e"></div></div>
+      <div style="grid-column:1/-1"><div style="font-size:9px;color:#9ca3af;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">ঠিকানা</div><div id="v-addr" style="font-size:10px;font-weight:600;color:#1a1a2e"></div></div>
+      <div><div style="font-size:9px;color:#9ca3af;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">পেমেন্ট পদ্ধতি</div><div id="v-pay" style="font-size:10px;font-weight:600;color:#1a1a2e"></div></div>
     </div>
   </div>
   <div style="margin:0 16px">
@@ -316,7 +334,7 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
     <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #e5e7eb;font-size:12px;color:#6b7280"><span>ডেলিভারি চার্জ</span><span id="v-del" style="font-weight:600"></span></div>
     <div style="display:flex;justify-content:space-between;padding:10px 0 4px;font-size:16px;font-weight:800;color:#1a1a2e"><span>সর্বমোট</span><span id="v-tot" style="color:#e91e8c"></span></div>
   </div>
-  <div style="background:linear-gradient(135deg,#e91e8c,#f44336);padding:16px 24px;text-align:center;margin-top:10px">
+  <div style="background:linear-gradient(135deg,#111,#4b4b4b);padding:18px 24px 20px;text-align:center;margin-top:18px">
     <div style="color:#fff;font-size:12px;font-weight:700;margin-bottom:5px">ধন্যবাদ কেনাকাটার জন্য!</div>
     <div style="color:rgba(255,255,255,.85);font-size:10px">📞 +880 1704 598 772 | +880 1633 924 359</div>
     <div style="color:rgba(255,255,255,.75);font-size:9px;margin-top:3px">hadiaproduct0@gmail.com | facebook.com/hadiaproduct0 | WA: 01867-591785</div>
@@ -558,9 +576,11 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
             <button class="g-btn g-btn-sm" onclick="addVar()">+</button>
           </div>
         </div>
-        <div class="fg"><label>পণ্যের ছবি (১২০০×১২০০ অটো)</label><div class="iu-area" onclick="document.getElementById('pImgs').click()"><div style="font-size:26px;margin-bottom:5px">📸</div><div style="font-size:13px;color:var(--gray);font-weight:600">ছবি আপলোড করুন (একাধিক)</div></div><input type="file" id="pImgs" accept="image/*" multiple style="display:none" onchange="previewImgs(this)"><div class="img-pv-grid" id="imgPvGrid"></div></div>
+        <div class="fg"><label>পণ্যের ছবি (১২০০×১২০০ অটো)</label><div class="iu-area" onclick="document.getElementById('pImgs').click()"><div style="font-size:26px;margin-bottom:5px">📸</div><div style="font-size:13px;color:var(--gray);font-weight:600">ছবি আপলোড করুন (একাধিক)</div></div><input type="file" id="pImgs" accept="image/*" multiple style="display:none" onchange="previewImgs(this)"><div class="img-pv-grid" id="imgPvGrid"></div><div style="font-size:11px;color:var(--gray);margin-top:7px">প্রথম ছবিটি অটো main image হবে।</div></div>
+        <div class="fg"><label>ম্যানুয়াল প্রোডাক্ট পেস্ট করুন (প্রতি লাইনে ১টি)</label><textarea id="bulkProdTxt" rows="6" placeholder='{"nm":"পণ্যের নাম","pr":1200,"op":1500,"cat":"হেডফোন","emoji":"🎧","desc":"বিবরণ","stk":20,"feat":true,"images":["Hadia-Product-Logo.jpg","img2.jpg"],"vars":[{"nm":"লাল","type":"color","pr":0},{"nm":"XL","type":"size","pr":100}]}&#10;{"nm":"আরেকটি প্রোডাক্ট","pr":999,"cat":"চার্জার","images":["img-a.jpg","img-b.jpg"]}' style="width:100%;background:var(--card);border:1.5px solid var(--bd);color:var(--text);padding:11px 13px;border-radius:10px;outline:none;font-size:13px;line-height:1.55"></textarea><div style="font-size:11px;color:var(--gray);margin-top:6px">images array এর প্রথম ছবিটি main image হবে। চাইলে mainImage property-ও ব্যবহার করতে পারো।</div></div>
         <div class="fg" style="display:flex;align-items:center;gap:10px"><input type="checkbox" id="pFeat" style="width:auto;accent-color:var(--pk)"><label for="pFeat" style="margin:0;cursor:pointer;font-size:13px;font-weight:600">ফিচার্ড পণ্য</label></div>
         <button class="g-btn" id="addProdBtn" onclick="addProd()">✅ পণ্য যোগ করুন</button>
+        <button class="g-btn g-btn-sm" style="width:100%;margin-top:8px;background:#1f2937" onclick="addBulkProds()">🧩 পেস্ট করে প্রোডাক্ট যোগ করুন</button>
       </div>
       <div style="margin-top:20px"><h3 style="margin-bottom:13px;font-size:15px;font-weight:800">📦 পণ্য তালিকা</h3><div id="admProdList"></div></div>
     </div>
@@ -637,17 +657,7 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 <div class="ai-window" id="aiWindow">
   <div class="ai-hdr">
     <div class="ai-hdr-icon">
-      <svg viewBox="0 0 36 36" fill="none" style="width:24px;height:24px">
-        <rect x="8" y="6" width="20" height="14" rx="4" fill="white" opacity="0.95"/>
-        <circle cx="13" cy="12" r="2.5" fill="#e91e8c"/><circle cx="13" cy="12" r="1" fill="white"/>
-        <circle cx="23" cy="12" r="2.5" fill="#e91e8c"/><circle cx="23" cy="12" r="1" fill="white"/>
-        <rect x="16" y="20" width="4" height="2.5" fill="white" opacity="0.8"/>
-        <rect x="9" y="22.5" width="18" height="12" rx="4" fill="white" opacity="0.95"/>
-        <rect x="14" y="24.5" width="8" height="8" rx="2" fill="rgba(233,30,140,.9)"/>
-        <text x="18" y="30.5" text-anchor="middle" font-size="5.5" font-weight="900" fill="white" font-style="italic" font-family="Arial">H</text>
-        <rect x="3" y="23" width="5" height="8" rx="2.5" fill="white" opacity="0.8"/>
-        <rect x="28" y="23" width="5" height="8" rx="2.5" fill="white" opacity="0.8"/>
-      </svg>
+      <img id="aiHdrLogo" src="" alt="Hadia Product AI">
     </div>
     <div><div class="ai-hdr-txt">Hadia Product AI সহায়তা</div><div class="ai-hdr-sub">পণ্য খুঁজুন বা প্রশ্ন করুন</div></div>
     <button class="ai-close" onclick="toggleAI()">✕</button>
@@ -667,7 +677,7 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 <footer class="footer-sec">
   <svg viewBox="0 0 1440 55" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style="width:100%;height:55px;display:block"><path d="M0,30 C200,55 400,5 600,30 C800,55 1000,10 1200,35 C1340,50 1400,20 1440,30 L1440,55 L0,55 Z" fill="#0d0d0d"/></svg>
   <div class="foot-inner">
-    <div class="foot-brand-nm" translate="no">HADIA PRODUCT</div>
+    <div class="foot-brand"><img id="footLogo" class="foot-logo" alt="Hadia Product"><div class="foot-brand-nm" translate="no">HADIA PRODUCT</div></div>
     <div class="foot-brand-sub">A Digital Online Shop</div>
     <div class="foot-socials">
       <a href="https://www.facebook.com/hadiaproduct0" target="_blank" class="foot-soc-item"><div class="foot-soc-icon" style="background:#1877f2"><svg width="18" height="18" fill="#fff" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></div><span class="foot-soc-lbl">Facebook</span></a>
@@ -682,14 +692,13 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 <script>
 // ===== FIREBASE CONFIG =====
 const firebaseConfig = {
-  apiKey:"AIzaSyAsX_rfE05qrqJ30x3C6ooLE5iCxyVI0r8",
-  authDomain:"hadia-product-shop.firebaseapp.com",
-  databaseURL:"https://hadia-product-shop-default-rtdb.firebaseio.com",
-  projectId:"hadia-product-shop",
-  storageBucket:"hadia-product-shop.firebasestorage.app",
-  messagingSenderId:"267751547989",
-  appId:"1:267751547989:web:ba83a5f5f704cb940160dc",
-  measurementId:"G-SSF8BQP5JV"
+  apiKey: "AIzaSyDcbthiGnfkC-QwDUaRLXXUCswBwGgpILY",
+  authDomain: "hadia-product.firebaseapp.com",
+  databaseURL: "https://hadia-product-default-rtdb.asia-southeast1.firebasedatabase.app/",
+  projectId: "hadia-product",
+  storageBucket: "hadia-product.firebasestorage.app",
+  messagingSenderId: "132149466553",
+  appId: "1:132149466553:web:1a0b732e97059500899268"
 };
 
 let db=null,storage=null,fbOk=false;
@@ -734,7 +743,7 @@ function loadFromFirebase(){
     }).catch(()=>{});
     // Load hero bg
     storage.ref('heroBg').getDownloadURL().then(url=>{
-      document.getElementById('heroBg').style.backgroundImage=`url(${url})`;
+      const hero=document.getElementById('heroBg'); if(hero) hero.style.backgroundImage=`url(${url})`;
     }).catch(()=>{});
   }
 }
@@ -776,32 +785,30 @@ function lev(a,b){
   return m[b.length][a.length];
 }
 function fuzzyMatch(q,text){
-  const ql=q.toLowerCase().trim(),tl=text.toLowerCase();
+  const ql=normalizeText(q),tl=normalizeText(text);
   if(!ql||ql.length<2)return false;
   if(tl.includes(ql))return true;
-  const qWords=ql.split(/[\s,]+/).filter(w=>w.length>1);
-  const tWords=tl.split(/[\s,]+/).filter(w=>w.length>1);
+  const qWords=ql.split(/\s+/).filter(w=>w.length>1);
+  const tWords=tl.split(/\s+/).filter(w=>w.length>1);
   for(const qw of qWords){
-    // Direct map check
     const mapped=LANG_MAP[qw];
-    if(mapped&&tl.includes(mapped.toLowerCase()))return true;
-    // Levenshtein check against product words
+    if(mapped&&normalizeText(mapped).split(/\s+/).some(m=>tl.includes(m))) return true;
     for(const tw of tWords){
       const maxL=Math.max(qw.length,tw.length);
-      if(maxL>0&&(1-lev(qw,tw)/maxL)>0.65)return true;
+      if(maxL>0&&(1-lev(qw,tw)/maxL)>0.72)return true;
     }
-    // Check LANG_MAP keys for fuzzy match
     for(const [en,bn] of Object.entries(LANG_MAP)){
-      if(lev(qw,en)<=2&&tl.includes(bn.toLowerCase()))return true;
+      if(lev(qw,en)<=2&&normalizeText(tl).includes(normalizeText(bn)))return true;
     }
   }
   return false;
 }
 function fuzzySearchProds(q){
-  if(!q.trim())return[];
+  const qq=normalizeText(q);
+  if(!qq)return[];
   return prods.filter(p=>
-    fuzzyMatch(q,p.nm)||fuzzyMatch(q,p.cat)||fuzzyMatch(q,p.desc)||
-    p.nm.toLowerCase().includes(q.toLowerCase())
+    fuzzyMatch(qq,p.nm)||fuzzyMatch(qq,p.cat)||fuzzyMatch(qq,p.desc)||
+    normalizeText(p.nm).includes(qq)
   );
 }
 
@@ -995,7 +1002,7 @@ async function dlPDF(){
     }
   }
   document.getElementById('v-id').textContent=o.id;
-  document.getElementById('v-date').textContent=o.date+' '+o.time;
+  document.getElementById('v-date').textContent=new Date(o.timestamp||Date.now()).toLocaleString('en-GB',{year:'numeric',month:'short',day:'2-digit',hour:'2-digit',minute:'2-digit'});
   document.getElementById('v-name').textContent=o.nm;
   document.getElementById('v-phone').textContent=o.ph;
   document.getElementById('v-addr').textContent=o.addr;
@@ -1057,6 +1064,101 @@ function rmImg(i){pendImgs[i]=null;document.getElementById('imgPvGrid').children
 function addVar(){const nm=document.getElementById('varNm').value.trim(),type=document.getElementById('varType').value,pr=parseInt(document.getElementById('varPr').value)||0;if(!nm){showToast('⚠️ নাম দিন');return;}pendVars.push({nm,type,pr});renderPendVars();document.getElementById('varNm').value='';document.getElementById('varPr').value='';}
 function renderPendVars(){document.getElementById('varList').innerHTML=pendVars.map((v,i)=>`<div class="var-adm-item"><span style="font-size:13px;font-weight:700">${v.type==='color'?'🎨':v.type==='size'?'📐':'🔖'} ${v.nm}</span><span style="font-size:11px;color:var(--gray)">${v.pr?(v.pr>0?'+':'')+v.pr+'৳':''}</span><button onclick="rmVar(${i})" style="background:#fef2f2;border:1.5px solid #fca5a5;color:var(--err);padding:3px 8px;border-radius:6px;cursor:pointer;font-size:11px;margin-left:auto">✕</button></div>`).join('');}
 function rmVar(i){pendVars.splice(i,1);renderPendVars();}
+function normalizeText(s){
+  return (s||'')
+    .toString()
+    .toLowerCase()
+    .replace(/[^\p{L}\p{N}\s]+/gu,' ')
+    .replace(/\s+/g,' ')
+    .trim();
+}
+function productImageList(obj){
+  const imgs=[];
+  if(Array.isArray(obj.images)) imgs.push(...obj.images.filter(Boolean).map(String));
+  if(Array.isArray(obj.imgs)) imgs.push(...obj.imgs.filter(Boolean).map(String));
+  if(obj.mainImage) imgs.unshift(String(obj.mainImage));
+  if(obj.mainImg) imgs.unshift(String(obj.mainImg));
+  if(obj.img) imgs.unshift(String(obj.img));
+  return [...new Set(imgs)].filter(Boolean);
+}
+function parseManualProductLine(line){
+  const txt=line.trim();
+  if(!txt) return null;
+  let obj=null;
+  try{
+    obj=JSON.parse(txt);
+  }catch(e){
+    obj=new Function('return ('+txt+')')();
+  }
+  if(!obj || typeof obj!=='object') return null;
+  const imgs=productImageList(obj);
+  if(imgs.length>1){
+    const main=obj.mainImage||obj.mainImg||obj.img;
+    if(main){
+      const mainStr=String(main);
+      const idx=imgs.indexOf(mainStr);
+      if(idx>0){imgs.splice(idx,1);imgs.unshift(mainStr);}
+    }
+  }
+  const vars=Array.isArray(obj.vars)?obj.vars.map(v=>({
+    nm:String(v.nm||v.name||'').trim(),
+    type:String(v.type||'other').trim(),
+    pr:parseInt(v.pr||v.price||0)||0
+  })).filter(v=>v.nm):[];
+  return {
+    id:obj.id||Date.now()+Math.floor(Math.random()*1000),
+    nm:String(obj.nm||obj.name||'').trim(),
+    pr:parseInt(obj.pr||obj.price||0),
+    op:parseInt(obj.op||obj.oldPrice||obj.old||0)||0,
+    cat:String(obj.cat||obj.category||'অন্যান্য').trim(),
+    desc:String(obj.desc||obj.description||'').trim(),
+    emoji:String(obj.emoji||obj.icon||'📦'),
+    stk:parseInt(obj.stk||obj.stock||100)||0,
+    feat:!!obj.feat,
+    rat:parseFloat(obj.rat||obj.rating||0)||0,
+    rvs:parseInt(obj.rvs||obj.reviews||0)||0,
+    imgs,
+    vars
+  };
+}
+function addBulkProds(){
+  const box=document.getElementById('bulkProdTxt');
+  const raw=(box?.value||'').trim();
+  if(!raw){showToast('⚠️ আগে প্রোডাক্ট পেস্ট করুন');return;}
+  let items=[];
+  try{
+    if(raw.startsWith('[')){
+      const arr=JSON.parse(raw);
+      items=Array.isArray(arr)?arr:[];
+    }else{
+      const lines=raw.split(/\n+/).map(s=>s.trim()).filter(Boolean);
+      items=lines.map(line=>parseManualProductLine(line)).filter(Boolean);
+    }
+  }catch(e){
+    showToast('⚠️ JSON/লাইন ফরম্যাট ভুল হয়েছে');
+    return;
+  }
+  if(!items.length){showToast('⚠️ কোনো valid product পাওয়া যায়নি');return;}
+  items.forEach((p,idx)=>{
+    if(!p.nm||!p.pr) return;
+    if(!p.id) p.id=Date.now()+idx;
+    if(!Array.isArray(p.imgs)) p.imgs=[];
+    if(p.imgs.length>1){
+      const main=p.mainImage||p.mainImg||p.img;
+      if(main){
+        const s=String(main);
+        const i=p.imgs.indexOf(s);
+        if(i>0){p.imgs.splice(i,1);p.imgs.unshift(s);}
+      }
+    }
+    prods.push(p);
+    if(db) db.ref('prods/'+p.id).set(p);
+  });
+  renderFeat();renderHomeShop();renderShop();renderAdmProds();renderDash();
+  box.value='';
+  showToast('✅ ম্যানুয়াল প্রোডাক্ট যোগ হয়েছে!');
+}
+
 
 // ===== ADMIN PRODUCTS (with Firebase Storage) =====
 async function addProd(){
@@ -1162,11 +1264,15 @@ function closeMod(id){document.getElementById(id).classList.remove('open');}
 // ===== KEYWORD AI with FUZZY SEARCH =====
 let aiOpen=false;
 const LK={
-  wa:`<a href="https://wa.me/8801867591785" target="_blank">💬 WhatsApp: 01867-591785</a>`,
-  fb:`<a href="https://www.facebook.com/hadiaproduct0" target="_blank">📘 Facebook Page</a>`,
+  wa:`<a href="https://wa.me/8801867591785" target="_blank" rel="noopener">💬 WhatsApp: 01867-591785</a>`,
+  fb:`<a href="https://www.facebook.com/hadiaproduct0" target="_blank" rel="noopener">📘 Facebook Page</a>`,
   em:`<a href="mailto:hadiaproduct0@gmail.com">📧 hadiaproduct0@gmail.com</a>`,
   p1:`<a href="tel:+8801704598772">📞 +880 1704 598 772</a>`,
   p2:`<a href="tel:+8801633924359">📞 +880 1633 924 359</a>`
+};
+const SOCIAL_ICONS = {
+  fb: `<svg width="20" height="20" fill="#fff" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>`,
+  wa: `<svg width="20" height="20" fill="#fff" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>`
 };
 function toggleAI(){aiOpen=!aiOpen;const w=document.getElementById('aiWindow');if(aiOpen){w.classList.add('open');document.getElementById('aiInp').focus();}else w.classList.remove('open');}
 function sendAI(){
@@ -1176,23 +1282,53 @@ function sendAI(){
   document.getElementById('aiMsgs').appendChild(ld);document.getElementById('aiMsgs').scrollTop=99999;
   setTimeout(()=>{document.getElementById('aiLd')?.remove();addAIMsg(processAI(q),'bot',true);},700);
 }
+function contactButtonsHTML(){
+  return `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px">
+      <a href="https://www.facebook.com/hadiaproduct0" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:10px;justify-content:center;background:#1877f2;color:#fff;text-decoration:none;padding:11px 12px;border-radius:12px;font-weight:700;font-size:13px">
+        ${SOCIAL_ICONS.fb}<span>Facebook</span>
+      </a>
+      <a href="https://wa.me/8801867591785" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:10px;justify-content:center;background:#25d366;color:#fff;text-decoration:none;padding:11px 12px;border-radius:12px;font-weight:700;font-size:13px">
+        ${SOCIAL_ICONS.wa}<span>WhatsApp</span>
+      </a>
+    </div>`;
+}
+function noProductHTML(){
+  return `দুঃখিত এই পণ্যটি আমাদের কাছে নেই তবে আপনি আমাদের ফেসবুক পেযে যোগাযোগ করে দেখতে পারেন বা আমাদের হোয়াটসাপে নক দিয়ে জেনে নিতে পারেন${contactButtonsHTML()}`;
+}
 function processAI(q){
-  const ql=q.toLowerCase();
+  const ql=normalizeText(q);
   const found=fuzzySearchProds(q);
-  const isWA=/whatsapp|হোয়াটসাপ/.test(ql);
-  const isFB=/facebook|ফেসবুক/.test(ql);
+  const isWA=/whatsapp|হোয়াটসাপ|হোয়াটসাপ|whats app|wa/.test(ql);
+  const isFB=/facebook|ফেসবুক|fb/.test(ql);
   const isEM=/email|ইমেইল|mail/.test(ql);
   const isPhone=/phone|ফোন|নম্বর|call|কল/.test(ql);
   const isDel=/delivery|ডেলিভারি|shipping|চার্জ/.test(ql);
   const isOrd=/order|অর্ডার|কিনব|buy/.test(ql);
   const isRet=/return|রিটার্ন|ফেরত/.test(ql);
-  const isContact=/contact|যোগাযোগ|সাহায্য|help/.test(ql);
-  const isHi=/হ্যালো|hello|hi|আস্স|সালাম/.test(ql);
-  if(isHi)return`আলাইকুম আস্সালাম! 😊 আমি Hadia Product AI। পণ্য খুঁজতে বা যেকোনো প্রশ্ন করুন!<br><br>📦 পণ্য জিজ্ঞেস করতে পারেন<br>🚚 ডেলিভারি চার্জ জানতে পারেন<br>📞 যোগাযোগের তথ্য পেতে পারেন`;
-  if(found.length>0){
-    const list=found.slice(0,3).map(p=>`<br>• <strong>${p.nm}</strong> — ৳${p.pr.toLocaleString()} ${p.stk>0?`✅ স্টকে আছে`:'❌ স্টক শেষ'}`).join('');
-    return`আমরা এই পণ্যগুলো খুঁজে পেয়েছি:${list}<br><br>অর্ডার করতে ${LK.wa} বা ${LK.fb} তে যোগাযোগ করুন।`;
+  const isContact=/contact|যোগাযোগ|সাহায্য|help|সাপোর্ট/.test(ql);
+  const isHi=/হ্যালো|hello|hi|আস্স|সালাম|assalam/.test(ql);
+
+  if(isHi){
+    return `আস্সালামু আলাইকুম! 👋 আমি Hadia Product AI।<br><br>আমি কয়েক সেকেন্ডে পুরো ওয়েবসাইটের পণ্য, ক্যাটাগরি আর তথ্য খুঁজে দিতে পারি। ভুল বানান, বাংলা-ইংরেজি মিশ্র লেখা, আর আনুমানিক নামও বুঝে উত্তর দেব।`;
   }
+
+  if(found.length>0){
+    const items=found.slice(0,5).map(p=>{
+      const img=p.imgs?.[0] ? `<img src="${p.imgs[0]}" alt="" style="width:54px;height:54px;border-radius:12px;object-fit:cover;border:1px solid #e5e7eb;flex-shrink:0">`
+      : `<div style="width:54px;height:54px;border-radius:12px;background:#f3f4f6;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0">${p.emoji||'📦'}</div>`;
+      return `<div style="display:flex;gap:10px;align-items:center;padding:10px;border:1px solid #e5e7eb;border-radius:14px;background:#fff">
+        ${img}
+        <div style="flex:1;min-width:0">
+          <div style="font-weight:800;font-size:13px;line-height:1.35">${p.nm}</div>
+          <div style="font-size:12px;color:#6b7280">৳${p.pr.toLocaleString()} ${p.op?`<span style="text-decoration:line-through;color:#9ca3af;margin-left:5px">৳${p.op.toLocaleString()}</span>`:''}</div>
+          <div style="font-size:11px;color:${p.stk>0?'#16a34a':'#dc2626'};font-weight:700;margin-top:2px">${p.stk>0?`স্টকে আছে (${p.stk})`:'স্টক শেষ'}</div>
+        </div>
+      </div>`;
+    }).join('');
+    return `আমরা এই পণ্যগুলো পেয়েছি:<div style="display:grid;gap:10px;margin-top:12px">${items}</div><div style="margin-top:12px">অর্ডার বা বিস্তারিত জানতে ${LK.wa} অথবা ${LK.fb} ব্যবহার করতে পারেন।</div>`;
+  }
+
   if(isDel)return`🚚 <strong>ডেলিভারি চার্জ:</strong><br>• ঢাকার মধ্যে: <strong>৳70</strong><br>• ঢাকার বাইরে: <strong>৳130</strong><br><br>সারা বাংলাদেশে ডেলিভারি।`;
   if(isOrd)return`🛒 <strong>অর্ডার করতে:</strong><br>১. পণ্য কার্টে যোগ করুন<br>২. চেকআউটে তথ্য দিন<br>৩. কনফার্ম করুন<br><br>সরাসরি: ${LK.wa}`;
   if(isRet)return`🔄 <strong>রিটার্ন পলিসি:</strong><br>সমস্যা হলে যোগাযোগ করুন:<br>${LK.wa}`;
@@ -1201,8 +1337,7 @@ function processAI(q){
   if(isEM)return`${LK.em}`;
   if(isPhone)return`${LK.p1}<br>${LK.p2}`;
   if(isContact)return`যোগাযোগ করুন:<br><br>${LK.wa}<br>${LK.fb}<br>${LK.em}<br>${LK.p1}<br>${LK.p2}`;
-  const catList=[...new Set(prods.map(p=>p.cat))].join(', ');
-  return`"${q}" খুঁজে পাইনি। 😔<br><br>আমাদের ক্যাটাগরি: <strong>${catList}</strong><br><br>সরাসরি জিজ্ঞেস করুন:<br>${LK.wa}`;
+  return noProductHTML();
 }
 function addAIMsg(txt,cls,isHTML){
   const el=document.getElementById('aiMsgs');
@@ -1281,6 +1416,7 @@ const HEADER_LOGO = "logo.png";
 
 const HEADER_LOGO = "Hadia-Product-Logo.jpg";
 const VOUCHER_LOGO = "Hadia-Product-Logo.jpg";
+const FOOTER_LOGO = "Hadia-Product-Logo.jpg";
 const AI_LOGO = "Hadia-Product-AI-Logo.png";
 
 /* AUTO APPLY */
@@ -1301,6 +1437,12 @@ window.addEventListener('DOMContentLoaded',()=>{
          svg.style.display = 'none';
       }
 
+  }
+
+  // FOOTER LOGO
+  const footLogo = document.getElementById('footLogo');
+  if(footLogo && FOOTER_LOGO){
+      footLogo.src = FOOTER_LOGO;
   }
 
   // VOUCHER LOGO
@@ -1330,12 +1472,13 @@ window.addEventListener('DOMContentLoaded',()=>{
 
   }
 
+  const aiHdr = document.getElementById('aiHdrLogo');
+  if(aiHdr && AI_LOGO){
+      aiHdr.src = AI_LOGO;
+  }
+
 });
 </script>
-
-
-<script>
-
 
 
 <script>
@@ -1346,7 +1489,7 @@ window.addEventListener('DOMContentLoaded',()=>{
 GitHub এ image upload দিয়ে শুধু Main Banner Background change করতে পারবে
 
 Example:
-const HERO_BG = "hero-bg.jpg";
+const HERO_BG = "Hadia-Cover.jpg";
 
 */
 
