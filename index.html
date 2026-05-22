@@ -160,6 +160,72 @@ nav button.act::after{content:'';position:absolute;bottom:4px;left:50%;transform
 .adm-tab{background:var(--card);border:1.5px solid var(--bd);color:var(--gray);padding:8px 15px;border-radius:10px;cursor:pointer;font-size:12px;font-weight:700;transition:.2s}
 .adm-tab.act{background:var(--gr);color:#fff;border-color:transparent;box-shadow:0 3px 12px rgba(233,30,140,.22)}
 .adm-sec{display:none}.adm-sec.active{display:block}
+/* ===== NEW ADMIN PANEL REDESIGN ===== */
+#page-admin{background:#080d1a;padding:0;min-height:100vh}
+.adm-layout{display:flex;min-height:100vh}
+.adm-sidebar{width:250px;background:linear-gradient(160deg,#0e1628 0%,#141b2d 40%,#0a0f1e 100%);display:flex;flex-direction:column;position:fixed;left:0;top:0;height:100vh;z-index:200;transition:transform .3s;border-right:1px solid rgba(255,255,255,.05);overflow-y:auto;overflow-x:hidden;scrollbar-width:none}
+.adm-sidebar::-webkit-scrollbar{display:none}
+.adm-sb-top{padding:20px 16px 16px;border-bottom:1px solid rgba(255,255,255,.06)}
+.adm-sb-brand{display:flex;align-items:center;gap:11px}
+.adm-sb-logo-wrap{width:38px;height:38px;background:linear-gradient(135deg,#e91e8c,#f44336);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:900;color:#fff;flex-shrink:0;box-shadow:0 4px 14px rgba(233,30,140,.4)}
+.adm-sb-nm{color:#f0f4ff;font-weight:800;font-size:12px;letter-spacing:.6px}
+.adm-sb-sub{color:#4a5980;font-size:9px;margin-top:1px;letter-spacing:.3px}
+.adm-sb-status{margin:10px 12px;background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.18);border-radius:7px;padding:7px 10px;font-size:10px;color:#34d399;font-weight:600}
+.adm-sb-nav{padding:6px 8px;flex:1}
+.adm-nav-lbl{font-size:9px;color:#2d3a55;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:4px 8px;margin-top:6px;margin-bottom:2px}
+.adm-nav-item{display:flex;align-items:center;gap:9px;padding:10px 11px;border-radius:9px;cursor:pointer;color:#6b7fa8;font-size:12.5px;font-weight:600;transition:.18s;margin-bottom:2px;border:1px solid transparent;user-select:none}
+.adm-nav-item:hover{background:rgba(255,255,255,.04);color:#a8b8d8}
+.adm-nav-item.act{background:linear-gradient(135deg,rgba(233,30,140,.16),rgba(244,67,54,.1));color:#fff;border-color:rgba(233,30,140,.22);box-shadow:0 2px 12px rgba(233,30,140,.12)}
+.adm-sb-bottom{padding:12px 8px;border-top:1px solid rgba(255,255,255,.05)}
+.adm-logout-btn{width:100%;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);color:#f87171;padding:9px;border-radius:9px;cursor:pointer;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px;transition:.2s}
+.adm-logout-btn:hover{background:rgba(239,68,68,.18)}
+.adm-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:199;backdrop-filter:blur(2px)}
+.adm-overlay.open{display:block}
+.adm-main-content{flex:1;margin-left:250px;min-height:100vh;background:#080d1a}
+.adm-topbar{display:flex;align-items:center;gap:12px;padding:13px 22px;background:rgba(14,22,40,.85);border-bottom:1px solid rgba(255,255,255,.05);position:sticky;top:0;z-index:50;backdrop-filter:blur(12px)}
+.adm-hamburger{display:none;flex-direction:column;gap:4px;cursor:pointer;background:none;border:none;padding:5px;flex-shrink:0}
+.adm-hamburger span{width:19px;height:2px;background:#6b7fa8;border-radius:2px;display:block;transition:.2s}
+.adm-topbar-title{color:#e8eeff;font-size:17px;font-weight:800;flex:1}
+.adm-topbar-time{color:#3a4a68;font-size:10.5px;white-space:nowrap}
+.adm-sec{display:none;padding:22px 24px}.adm-sec.active{display:block}
+/* Dark overrides */
+#page-admin .pf{background:#111827;border-color:rgba(255,255,255,.07);box-shadow:0 4px 24px rgba(0,0,0,.4)}
+#page-admin h3{color:#dde6ff}
+#page-admin p{color:#6b7fa8}
+#page-admin .fg label{color:#6b7fa8}
+#page-admin .fg input,#page-admin .fg select,#page-admin .fg textarea{background:#080d1a;border-color:rgba(255,255,255,.1);color:#dde6ff}
+#page-admin .fg input::placeholder,#page-admin .fg textarea::placeholder{color:#2d3a55}
+#page-admin .fg input:focus,#page-admin .fg select:focus,#page-admin .fg textarea:focus{border-color:#e91e8c;box-shadow:0 0 0 3px rgba(233,30,140,.08)}
+#page-admin .stat-card{background:#111827;border-color:rgba(255,255,255,.07)}
+#page-admin .stat-card::after{opacity:.04}
+#page-admin .stat-lbl{color:#6b7fa8}
+#page-admin .stat-val{background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+#page-admin .stat-ch{color:#34d399}
+#page-admin .chart-box{background:#111827;border-color:rgba(255,255,255,.07)}
+#page-admin .chart-ttl{color:#dde6ff}
+#page-admin .c-lbls div{color:#3a4a68}
+#page-admin .period-tabs .fb-btn{background:#111827;border-color:rgba(255,255,255,.08);color:#6b7fa8}
+#page-admin .period-tabs .fb-btn.act{background:var(--gr);color:#fff;border-color:transparent}
+#page-admin .ord-card{background:#111827;border-color:rgba(255,255,255,.07)}
+#page-admin .ord-id{color:#f472b6}
+#page-admin .rv-card{background:#111827;border-color:rgba(255,255,255,.07)}
+#page-admin .rv-nm{color:#dde6ff}
+#page-admin .rv-txt{color:#a8b8d8}
+#page-admin .rv-date{color:#3a4a68}
+#page-admin .rv-stars{color:#fbbf24}
+#page-admin .iu-area{background:#080d1a;border-color:rgba(255,255,255,.1)}
+#page-admin .iu-area div{color:#6b7fa8}
+#page-admin .var-adm-item{background:#080d1a;border-color:rgba(255,255,255,.08);color:#dde6ff}
+#page-admin select option{background:#111827;color:#dde6ff}
+#page-admin .img-pv{border-color:rgba(255,255,255,.1)}
+@media(max-width:768px){
+  .adm-sidebar{transform:translateX(-100%)}
+  .adm-sidebar.open{transform:translateX(0)}
+  .adm-main-content{margin-left:0}
+  .adm-hamburger{display:flex}
+  .adm-sec{padding:14px 16px}
+  .adm-topbar{padding:11px 14px}
+}
 .ord-card{background:var(--card);border:1.5px solid var(--bd);border-radius:14px;padding:15px;margin-bottom:11px;box-shadow:var(--sh)}
 .ord-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
 .ord-id{font-weight:800;font-size:14px;color:var(--pk)}
@@ -292,14 +358,14 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 .foot-brand{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap}
 .foot-logo{width:34px;height:34px;object-fit:contain;border-radius:8px;display:block}
 @media(max-width:600px){
-  .hdr-r{gap:6px;flex-shrink:0}
-  .srch-wrap{padding:5px 7px 5px 10px;width:110px;flex-shrink:0}
-  .srch-wrap input{width:58px;font-size:12px}
-  .srch-btn{width:25px;height:25px;flex-shrink:0}
-  .cart-btn{width:38px;height:38px;flex-shrink:0}
-  .logo-svg-wrap{width:40px;height:40px;flex-shrink:0}
-  .logo-img-el{width:40px;height:40px}
-  header{padding:0 10px;gap:6px}
+    .hdr-r{gap:8px;flex-shrink:0}
+  .srch-wrap{padding:6px 8px 6px 12px;width:145px;flex-shrink:0}
+  .srch-wrap input{width:82px;font-size:13px}
+  .srch-btn{width:28px;height:28px;flex-shrink:0}
+  .cart-btn{width:40px;height:40px;flex-shrink:0}
+  .logo-svg-wrap{width:42px;height:42px;flex-shrink:0}
+  .logo-img-el{width:42px;height:42px}
+  header{padding:0 12px;gap:8px}
 }
 </style>
 
@@ -344,7 +410,7 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
     <div style="display:flex;justify-content:space-between;padding:10px 0 4px;font-size:16px;font-weight:800;color:#1a1a2e"><span>সর্বমোট</span><span id="v-tot" style="color:#e91e8c"></span></div>
   </div>
   <div style="line-height:0"><svg viewBox="0 0 560 25" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style="width:100%;height:25px;display:block"><path d="M0,12 C100,22 200,2 300,14 C400,24 500,4 560,12 L560,25 L0,25 Z" fill="#111"/></svg></div><div style="background:linear-gradient(135deg,#111,#4b4b4b);padding:18px 24px 20px;text-align:center;margin-top:auto">
-    <div style="color:#fff;font-size:12px;font-weight:700;margin-bottom:5px">কেনাকাটা করার জন্য ধন্যবাদ!</div>
+    <div style="color:#fff;font-size:12px;font-weight:700;margin-bottom:5px">ধন্যবাদ কেনাকাটার জন্য!</div>
     <div style="color:rgba(255,255,255,.85);font-size:10px">📞 +880 1704 598 772 | +880 1633 924 359</div>
     <div style="color:rgba(255,255,255,.75);font-size:9px;margin-top:3px">hadiaproduct0@gmail.com | facebook.com/hadiaproduct0 | WA: 01867-591785</div>
   </div>
@@ -536,20 +602,79 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 
 <!-- ADMIN -->
 <div class="page" id="page-admin">
-  <div class="adm-wrap">
-    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap"><div class="sec-ttl"><div class="sec-ttl-inner"><span>অ্যাডমিন প্যানেল</span><div class="mv-line"></div></div></div><button class="g-btn g-btn-sm" onclick="adminLogout()">🚪 Logout</button></div>
-    <div class="fb-status" id="fbStatus">✅ Firebase সংযুক্ত — সব ডেটা পার্মানেন্ট সেভ হচ্ছে</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px">
-      <div style="background:var(--card);border:1.5px solid var(--bd);border-radius:14px;padding:16px;box-shadow:var(--sh)">
-        <div style="font-size:13px;font-weight:700;color:var(--gray);margin-bottom:10px">🖼️ শপ লোগো আপলোড</div>
-        <label class="g-btn g-btn-sm" style="display:inline-block;cursor:pointer">লোগো বেছে নিন<input type="file" accept="image/*" style="display:none" onchange="uploadLogo(this)"></label>
-      </div>
-      <div style="background:var(--card);border:1.5px solid var(--bd);border-radius:14px;padding:16px;box-shadow:var(--sh)">
-        <div style="font-size:13px;font-weight:700;color:var(--gray);margin-bottom:10px">🌄 হিরো ব্যাকগ্রাউন্ড</div>
-        <label class="g-btn g-btn-sm" style="display:inline-block;cursor:pointer">ব্যাকগ্রাউন্ড বদলান<input type="file" accept="image/*" style="display:none" onchange="setHeroBg(this)"></label>
+<div class="adm-layout">
+  <!-- ===== SIDEBAR ===== -->
+  <aside class="adm-sidebar">
+    <div class="adm-sb-top">
+      <div class="adm-sb-brand">
+        <div class="adm-sb-logo-wrap">H</div>
+        <div>
+          <div class="adm-sb-nm">HADIA PRODUCT</div>
+          <div class="adm-sb-sub">ADMIN DASHBOARD</div>
+        </div>
       </div>
     </div>
-    <div class="adm-tabs">
+    <div class="adm-sb-status" id="fbStatus">🔌 Firebase সংযুক্ত হচ্ছে...</div>
+    <nav class="adm-sb-nav">
+      <div class="adm-nav-lbl">প্রধান</div>
+      <div class="adm-nav-item act" onclick="setAdmTab('dash',this)">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        ড্যাশবোর্ড
+      </div>
+      <div class="adm-nav-lbl">ব্যবস্থাপনা</div>
+      <div class="adm-nav-item" onclick="setAdmTab('prods',this)">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+        পণ্য ব্যবস্থাপনা
+      </div>
+      <div class="adm-nav-item" onclick="setAdmTab('orders',this)">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        অর্ডার
+      </div>
+      <div class="adm-nav-item" onclick="setAdmTab('cats',this)">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+        ক্যাটাগরি
+      </div>
+      <div class="adm-nav-item" onclick="setAdmTab('rvs',this)">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        রিভিউ ব্যবস্থাপনা
+      </div>
+      <div class="adm-nav-lbl">উন্নত</div>
+      <div class="adm-nav-item" onclick="setAdmTab('aitrain',this)">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        AI ট্রেনিং
+      </div>
+      <div class="adm-nav-lbl">সেটিংস</div>
+      <div class="adm-nav-item" onclick="setAdmTab('settings',this)">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93A10 10 0 1 1 4.93 19.07 10 10 0 0 1 19.07 4.93"/></svg>
+        সেটিংস
+      </div>
+    </nav>
+    <div class="adm-sb-bottom">
+      <button class="adm-logout-btn" onclick="adminLogout()">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        লগআউট
+      </button>
+    </div>
+  </aside>
+
+  <!-- Mobile overlay -->
+  <div class="adm-overlay" id="admOverlay" onclick="closeAdmSidebar()"></div>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <div class="adm-main-content">
+    <!-- Top Bar -->
+    <div class="adm-topbar">
+      <button class="adm-hamburger" onclick="toggleAdmSidebar()">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="adm-topbar-title" id="admPageTitle">📊 ড্যাশবোর্ড</div>
+      <div style="display:flex;align-items:center;gap:12px;margin-left:auto">
+        <div class="adm-topbar-time" id="admClock"></div>
+        <div style="width:32px;height:32px;background:linear-gradient(135deg,#e91e8c,#f44336);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:800">A</div>
+      </div>
+    </div>
+    <!-- Tab sections (adm-tabs kept for compat) -->
+    <div class="adm-tabs" style="display:none">
       <button class="adm-tab act" onclick="setAdmTab('dash',this)">📊 ড্যাশবোর্ড</button>
       <button class="adm-tab" onclick="setAdmTab('prods',this)">📦 পণ্য</button>
       <button class="adm-tab" onclick="setAdmTab('orders',this)">🛒 অর্ডার</button>
@@ -622,10 +747,26 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
       <h3 style="margin-bottom:12px;font-size:14px;font-weight:800">📚 সেভ করা তথ্য</h3>
       <div id="aiTrainList"></div>
     </div>
-  </div>
-</div>
-
-<!-- SUCCESS -->
+  <
+    <!-- SETTINGS TAB -->
+    <div class="adm-sec" id="tab-settings">
+      <div class="pf" style="margin-bottom:18px">
+        <h3 style="margin-bottom:18px;font-size:15px;font-weight:800">⚙️ শপ সেটিংস</h3>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+          <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:18px">
+            <div style="font-size:13px;font-weight:700;color:#a8b8d8;margin-bottom:12px">🖼️ শপ লোগো</div>
+            <p style="font-size:11px;color:#4a5980;margin-bottom:12px;line-height:1.6">হেডার ও ভাউচারে অটো আপডেট হবে।</p>
+            <label class="g-btn g-btn-sm" style="display:inline-block;cursor:pointer">লোগো বেছে নিন<input type="file" accept="image/*" style="display:none" onchange="uploadLogo(this)"></label>
+          </div>
+          <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:18px">
+            <div style="font-size:13px;font-weight:700;color:#a8b8d8;margin-bottom:12px">🌄 হিরো ব্যাকগ্রাউন্ড</div>
+            <p style="font-size:11px;color:#4a5980;margin-bottom:12px;line-height:1.6">হোম পেজের ব্যাকগ্রাউন্ড ছবি।</p>
+            <label class="g-btn g-btn-sm" style="display:inline-block;cursor:pointer">ব্যাকগ্রাউন্ড বদলান<input type="file" accept="image/*" style="display:none" onchange="setHeroBg(this)"></label>
+          </div>
+        </div>
+      </div>
+    </div>
+!-- SUCCESS -->
 <div class="page" id="page-success">
   <div class="succ-wrap">
     <div style="font-size:70px;margin-bottom:16px">🎉</div>
@@ -687,7 +828,7 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
     <button class="ai-close" onclick="toggleAI()">✕</button>
   </div>
   <div class="ai-msgs" id="aiMsgs">
-    <div class="ai-msg bot">আস্সালামু আলাইকুম! 👋 আমি হাদিয়া প্রোডাক্টের AI। পণ্য খুঁজতে বা যেকোনো প্রশ্ন করুন — ভুল বানানেও চলবে! 😊</div>
+    <div class="ai-msg bot">আসসালামু আলাইকুম! 👋 আমি হাদিয়া প্রোডাক্টের AI, পণ্য খুঁজতে বা আমাদের সম্পর্কে যেকোনো প্রশ্ন করুন 😊</div>
   </div>
   <div class="ai-inp-wrap">
     <input class="ai-inp" id="aiInp" placeholder="যেমন: earbuds আছে?" onkeydown="if(event.key==='Enter')sendAI()">
@@ -955,10 +1096,31 @@ function renderShop(){
   document.getElementById('shopGrid').innerHTML=list.length?list.map(prodCard).join(''):`<p style="color:var(--lgray);grid-column:1/-1;text-align:center;padding:50px;font-size:15px">😔 কোনো পণ্য পাওয়া যায়নি</p>`;
 }
 function doSearch(){showPg('shop');setNav(document.querySelectorAll('nav button')[1]);curCat='all';document.querySelectorAll('.filter-bar .fb-btn').forEach(b=>b.classList.remove('act'));document.getElementById('allFb')?.classList.add('act');setTimeout(renderShop,50);}
+function getProdRating(id){
+  const rvs=(rvStore[id]||[]).filter(r=>r.ok);
+  if(!rvs.length)return null;
+  const avg=rvs.reduce((s,r)=>s+(r.stars||0),0)/rvs.length;
+  return{rat:Math.round(avg*10)/10,cnt:rvs.length};
+}
+// ===== DYNAMIC REVIEW HELPERS =====
+function getProdApprovedRvs(id){return(rvStore[id]||[]).filter(r=>r.ok);}
+function getProdRvCount(id){return getProdApprovedRvs(id).length||0;}
+function getProdRat(id){
+  const rvs=getProdApprovedRvs(id);
+  if(!rvs.length)return 0;
+  return rvs.reduce((s,r)=>s+(r.stars||0),0)/rvs.length;
+}
+function starStr(rat,size){
+  const f=Math.floor(rat),h=rat-f>=.4&&rat-f<.9?1:0,e=5-f-h;
+  const s=size||'13';
+  return`<span style="color:#f59e0b;font-size:${s}px">${'★'.repeat(f)}${h?'⯨':''}</span><span style="color:#d1d5db;font-size:${s}px">${'☆'.repeat(e)}</span>`;
+}
+
 function prodCard(p){
-  const st='★'.repeat(Math.floor(p.rat))+'☆'.repeat(5-Math.floor(p.rat));
+  const _rv=getProdRating(p.id);const _rat=_rv?_rv.rat:p.rat;const _cnt=_rv?_rv.cnt:p.rvs;
+  const st='★'.repeat(Math.floor(_rat))+'☆'.repeat(5-Math.floor(_rat));
   const img=p.imgs&&p.imgs[0]?`<img src="${p.imgs[0]}" style="width:100%;height:100%;object-fit:cover" alt="">`:`<span class="prod-emoji">${p.emoji}</span>`;
-  return`<div class="prod-card" onclick="openProd(${p.id})">${p.feat?'<div class="prod-badge">⭐ ফিচার্ড</div>':''}<div class="prod-img-w">${img}</div><div class="prod-info"><div class="prod-nm">${p.nm}</div><div><span class="prod-pr">৳${p.pr.toLocaleString()}</span>${p.op?`<span class="prod-old">৳${p.op.toLocaleString()}</span>`:''}</div><div class="prod-rat">${st} <span style="color:var(--lgray)">(${p.rvs})</span></div><div class="prod-stk ${p.stk>0?'in-s':'out-s'}">${p.stk>0?'✅ স্টকে আছে':'❌ স্টক শেষ'}</div><button class="adc-btn" onclick="event.stopPropagation();addCart(${p.id})" ${p.stk===0?'disabled':''}>🛒 কার্টে যোগ করুন</button></div></div>`;
+  return`<div class="prod-card" onclick="openProd(${p.id})">${p.feat?'<div class="prod-badge">⭐ ফিচার্ড</div>':''}<div class="prod-img-w">${img}</div><div class="prod-info"><div class="prod-nm">${p.nm}</div><div><span class="prod-pr">৳${p.pr.toLocaleString()}</span>${p.op?`<span class="prod-old">৳${p.op.toLocaleString()}</span>`:''}</div><div class="prod-rat">${_cnt>0?st:'☆☆☆☆☆'} <span style="color:var(--lgray)">(${_cnt})</span></div><div class="prod-stk ${p.stk>0?'in-s':'out-s'}">${p.stk>0?'✅ স্টকে আছে':'❌ স্টক শেষ'}</div><button class="adc-btn" onclick="event.stopPropagation();addCart(${p.id})" ${p.stk===0?'disabled':''}>🛒 কার্টে যোগ করুন</button></div></div>`;
 }
 function sortProds(v){if(v==='pl')prods.sort((a,b)=>a.pr-b.pr);else if(v==='ph')prods.sort((a,b)=>b.pr-a.pr);else if(v==='rt')prods.sort((a,b)=>b.rat-a.rat);renderShop();renderHomeShop();renderFeat();}
 
@@ -966,12 +1128,12 @@ function sortProds(v){if(v==='pl')prods.sort((a,b)=>a.pr-b.pr);else if(v==='ph')
 let detQty=1;
 function openProd(id){curProd=prods.find(p=>p.id===id);if(!curProd)return;sldrIdx=0;varAdj=0;detQty=1;renderDet();renderRvs(id);showPg('detail');}
 function renderDet(){
-  const p=curProd,st='★'.repeat(Math.floor(p.rat))+'☆'.repeat(5-Math.floor(p.rat));
+  const p=curProd;const _rv2=getProdRating(p.id);const _rat2=_rv2?_rv2.rat:p.rat;const _cnt2=_rv2?_rv2.cnt:p.rvs;const st='★'.repeat(Math.floor(_rat2))+'☆'.repeat(5-Math.floor(_rat2));
   const hasImg=p.imgs&&p.imgs.length>0;
   const sldr=`<div class="sldr-wrap" id="sldrMain">${hasImg?`<img id="sldrImg" src="${p.imgs[0]}" alt="">`:`<span class="sldr-emoji">${p.emoji}</span>`}${hasImg&&p.imgs.length>1?'<button class="sldr-arr sldr-prev" onclick="slide(-1)">‹</button><button class="sldr-arr sldr-next" onclick="slide(1)">›</button>':''}</div>${hasImg&&p.imgs.length>1?`<div class="sldr-thumbs">${p.imgs.map((img,i)=>`<div class="sldr-th ${i===0?'act':''}" onclick="goSlide(${i})"><img src="${img}" alt=""></div>`).join('')}</div>`:''}`;
   const varTypes=[...new Set((p.vars||[]).map(v=>v.type))];
   const varHtml=varTypes.map(type=>{const opts=p.vars.filter(v=>v.type===type);const lbl=type==='color'?'🎨 কালার':type==='size'?'📐 সাইজ':'🔖 অন্যান্য';return`<div class="var-group"><div class="var-lbl">${lbl}</div><div class="var-opts">${opts.map(o=>{const isC=type==='color';const cssClr=isC?colorToCSS(o.nm):null;const clrStyle=cssClr?`background:${cssClr};border-color:${cssClr};outline:2px solid rgba(0,0,0,.08)`:isC?'background:#ccc;border:2px dashed #999':'';return`<div class="var-opt ${isC?'clr-opt':''}" style="${clrStyle}" onclick="selVar(${o.pr||0},this)" title="${o.nm}${o.pr?(o.pr>0?'+':'')+o.pr+'৳':''}">${isC?'':`${o.nm}${o.pr?(o.pr>0?' +':' ')+o.pr+'৳':''}`}</div>`;}).join('')}</div></div>`;}).join('');
-  document.getElementById('detContent').innerHTML=`<div>${sldr}</div><div><div class="det-title">${p.nm}</div><div style="color:#f59e0b;font-size:15px;margin-bottom:8px">${st} <span style="color:var(--lgray);font-size:12px">(${p.rvs} রিভিউ)</span></div><div class="det-price" id="detPr">৳${p.pr.toLocaleString()} ${p.op?`<span style="font-size:15px;color:var(--lgray);text-decoration:line-through;-webkit-text-fill-color:var(--lgray)">৳${p.op.toLocaleString()}</span>`:''}</div><div class="det-desc">${p.desc}</div>${varHtml}<div class="prod-stk ${p.stk>0?'in-s':'out-s'}" style="font-size:13px;margin-bottom:14px">${p.stk>0?`✅ স্টকে আছে (${p.stk} টি)`:'❌ স্টক শেষ'}</div><div class="qty-ctrl"><button class="qty-btn" onclick="chQty(-1)">−</button><span id="qtyNum" style="font-size:17px;font-weight:700;min-width:24px;text-align:center">1</span><button class="qty-btn" onclick="chQty(1)">+</button></div><button class="g-btn" style="width:100%;padding:13px;font-size:15px;margin-bottom:10px;border-radius:12px" onclick="addCartDet()" ${p.stk===0?'disabled':''}>🛒 কার্টে যোগ করুন</button><button style="width:100%;background:var(--card);border:2px solid var(--pk);color:var(--pk);padding:13px;border-radius:12px;cursor:pointer;font-weight:700;font-size:15px" onclick="addCartDet();showPg('checkout')" ${p.stk===0?'disabled':''}>⚡ এখনই কিনুন</button></div>`;
+  document.getElementById('detContent').innerHTML=`<div>${sldr}</div><div><div class="det-title">${p.nm}</div><div style="color:#f59e0b;font-size:15px;margin-bottom:8px">${st} <span style="color:var(--lgray);font-size:12px">(${_cnt2} রিভিউ)</span></div><div class="det-price" id="detPr">৳${p.pr.toLocaleString()} ${p.op?`<span style="font-size:15px;color:var(--lgray);text-decoration:line-through;-webkit-text-fill-color:var(--lgray)">৳${p.op.toLocaleString()}</span>`:''}</div><div class="det-desc">${p.desc}</div>${varHtml}<div class="prod-stk ${p.stk>0?'in-s':'out-s'}" style="font-size:13px;margin-bottom:14px">${p.stk>0?`✅ স্টকে আছে (${p.stk} টি)`:'❌ স্টক শেষ'}</div><div class="qty-ctrl"><button class="qty-btn" onclick="chQty(-1)">−</button><span id="qtyNum" style="font-size:17px;font-weight:700;min-width:24px;text-align:center">1</span><button class="qty-btn" onclick="chQty(1)">+</button></div><button class="g-btn" style="width:100%;padding:13px;font-size:15px;margin-bottom:10px;border-radius:12px" onclick="addCartDet()" ${p.stk===0?'disabled':''}>🛒 কার্টে যোগ করুন</button><button style="width:100%;background:var(--card);border:2px solid var(--pk);color:var(--pk);padding:13px;border-radius:12px;cursor:pointer;font-weight:700;font-size:15px" onclick="addCartDet();showPg('checkout')" ${p.stk===0?'disabled':''}>⚡ এখনই কিনুন</button></div>`;
 }
 function selVar(pr,el){varAdj=pr;el.closest('.var-opts').querySelectorAll('.var-opt').forEach(o=>o.classList.remove('sel'));el.classList.add('sel');const tot=curProd.pr+pr;const el2=document.getElementById('detPr');if(el2)el2.innerHTML=`৳${tot.toLocaleString()} ${pr!==0?`<span style="font-size:12px;font-weight:600;-webkit-text-fill-color:${pr>0?'var(--err)':'var(--ok)'}"> (${pr>0?'+':''}${pr}৳)</span>`:''}`;}
 function slide(d){if(!curProd?.imgs?.length)return;sldrIdx=(sldrIdx+d+curProd.imgs.length)%curProd.imgs.length;const img=document.getElementById('sldrImg');if(img)img.src=curProd.imgs[sldrIdx];document.querySelectorAll('.sldr-th').forEach((t,i)=>t.classList.toggle('act',i===sldrIdx));}
@@ -1036,10 +1198,16 @@ async function dlPDF(){
   // Inject logo into voucher
   const vLogo=document.getElementById('vLogoWrap');
   if(vLogo){
+    const hdrLogo=document.getElementById('logoSvgWrap');
     if(logoUrl){
-      vLogo.innerHTML=`<img src="${logoUrl}" style="width:100%;height:100%;object-fit:contain;">`;
-    }else{
-      vLogo.innerHTML=`<svg viewBox="0 0 80 80" fill="none" style="width:48px;height:48px"><defs><linearGradient id="vg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#e91e8c"/><stop offset="100%" stop-color="#f44336"/></linearGradient></defs><path d="M10 24 L6 58 L70 58" stroke="white" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><line x1="70" y1="58" x2="65" y2="24" stroke="white" stroke-width="5.5" stroke-linecap="round"/><circle cx="20" cy="67" r="5" fill="white"/><circle cx="56" cy="67" r="5" fill="white"/><rect x="27" y="8" width="26" height="34" rx="5" fill="url(#vg)"/><path d="M33 8 Q40 1 47 8" stroke="#ff80ab" stroke-width="2.5" fill="none" stroke-linecap="round"/><text x="40" y="31" text-anchor="middle" font-size="16" font-weight="900" fill="white" font-style="italic" font-family="Arial,sans-serif">H</text></svg>`;
+      vLogo.innerHTML=`<img src="${logoUrl}" style="width:100%;height:100%;object-fit:contain;border-radius:10px;">`;
+    } else if(hdrLogo){
+      const clone=hdrLogo.cloneNode(true);
+      clone.querySelectorAll('img').forEach(i=>{i.style.width='48px';i.style.height='48px';});
+      clone.querySelectorAll('svg').forEach(s=>{s.setAttribute('width','48');s.setAttribute('height','48');});
+      vLogo.innerHTML='';vLogo.appendChild(clone);
+    } else {
+      vLogo.innerHTML=`<svg viewBox="0 0 80 80" fill="none" style="width:48px;height:48px"><defs><linearGradient id="vg2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#e91e8c"/><stop offset="100%" stop-color="#f44336"/></linearGradient></defs><path d="M10 24 L6 58 L70 58" stroke="white" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><line x1="70" y1="58" x2="65" y2="24" stroke="white" stroke-width="5.5" stroke-linecap="round"/><circle cx="20" cy="67" r="5" fill="white"/><circle cx="56" cy="67" r="5" fill="white"/><rect x="27" y="8" width="26" height="34" rx="5" fill="url(#vg2)"/><path d="M33 8 Q40 1 47 8" stroke="#ff80ab" stroke-width="2.5" fill="none" stroke-linecap="round"/><text x="40" y="31" text-anchor="middle" font-size="16" font-weight="900" fill="white" font-style="italic" font-family="Arial,sans-serif">H</text></svg>`;
     }
   }
   document.getElementById('v-id').textContent=o.id;
@@ -1177,9 +1345,19 @@ function addBulkProds(){
     if(raw.startsWith('[')){
       const arr=JSON.parse(raw);
       items=Array.isArray(arr)?arr:[];
-    }else{
-      const lines=raw.split(/\n+/).map(s=>s.trim()).filter(Boolean);
-      items=lines.map(line=>parseManualProductLine(line)).filter(Boolean);
+    } else {
+      // Try multi-line: extract balanced {} blocks
+      const blocks=[];let depth=0,start=-1;
+      for(let i=0;i<raw.length;i++){
+        if(raw[i]==='{'){if(depth===0)start=i;depth++;}
+        else if(raw[i]==='}'){depth--;if(depth===0&&start>=0){blocks.push(raw.slice(start,i+1));start=-1;}}
+      }
+      if(blocks.length){
+        items=blocks.map(b=>{try{return parseManualProductLine(b);}catch{return null;}}).filter(Boolean);
+      } else {
+        const lines=raw.split(/\n+/).map(s=>s.trim()).filter(Boolean);
+        items=lines.map(line=>parseManualProductLine(line)).filter(Boolean);
+      }
     }
   }catch(e){
     showToast('⚠️ JSON/লাইন ফরম্যাট ভুল হয়েছে');
@@ -1289,7 +1467,7 @@ function appRv(pid,fbKey){
   if(!rvStore[pid])return;
   const rv=rvStore[pid].find(r=>r.fbKey===fbKey);
   if(rv){rv.ok=true;if(db){db.ref('reviews/'+pid+'/'+fbKey+'/ok').set(true);}}
-  renderAdmRvs();showToast('✅ অনুমোদন হয়েছে');
+  renderAdmRvs();renderShop();renderFeat();renderHomeShop();if(curProd)renderDet();showToast('✅ অনুমোদন হয়েছে — রেটিং আপডেট হয়েছে');
 }
 
 // ===== DASHBOARD =====
@@ -1311,7 +1489,20 @@ function renderDash(){
   document.getElementById('chartLbls').innerHTML=lbls.map(l=>`<div>${l}</div>`).join('');
   document.getElementById('topProds').innerHTML=prods.slice(0,3).map((p,i)=>`<div style="display:flex;align-items:center;gap:11px;padding:10px 0;border-bottom:1px solid var(--bd)"><span style="font-size:17px;font-weight:800;background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent">#${i+1}</span><span style="font-size:20px">${p.emoji}</span><div style="flex:1"><div style="font-size:13px;font-weight:700">${p.nm}</div><div style="font-size:11px;color:var(--lgray)">৳${p.pr.toLocaleString()}</div></div><div style="font-size:11px;font-weight:700;color:var(--ok)">স্টক: ${p.stk}</div></div>`).join('');
 }
-function setAdmTab(tab,el){document.querySelectorAll('.adm-tab').forEach(b=>b.classList.remove('act'));document.querySelectorAll('.adm-sec').forEach(s=>s.classList.remove('active'));el.classList.add('act');document.getElementById('tab-'+tab).classList.add('active');if(tab==='rvs')renderAdmRvs();if(tab==='cats')renderAdmCats();if(tab==='orders')renderAdmOrds();if(tab==='dash')renderDash();if(tab==='aitrain')renderAITrainList();}
+function setAdmTab(tab,el){
+  document.querySelectorAll('.adm-nav-item').forEach(b=>b.classList.remove('act'));
+  document.querySelectorAll('.adm-sec').forEach(s=>s.classList.remove('active'));
+  el.classList.add('act');
+  const sec=document.getElementById('tab-'+tab);if(sec)sec.classList.add('active');
+  const ttl=document.getElementById('admPageTitle');
+  if(ttl)ttl.textContent=el.getAttribute('data-title')||tab;
+  if(tab==='rvs')renderAdmRvs();
+  if(tab==='cats')renderAdmCats();
+  if(tab==='orders')renderAdmOrds();
+  if(tab==='dash')renderDash();
+  if(tab==='aitrain')renderAITrainList();
+  closeAdmSidebar();
+}
 function closeMod(id){document.getElementById(id).classList.remove('open');}
 
 
@@ -1416,7 +1607,7 @@ function processAI(q){
   const isHi=/হ্যালো|hello|hi|আস্স|সালাম|assalam/.test(ql);
 
   if(isHi){
-    return `আস্সালামু আলাইকুম! 👋 আমি Hadia Product AI,<br><br>আমি কয়েক সেকেন্ডে পুরো ওয়েবসাইটের পণ্য, ক্যাটাগরি আর তথ্য খুঁজে দিতে পারি।`;
+    return `আস্সালামু আলাইকুম! 👋 আমি Hadia Product AI।<br><br>আমি কয়েক সেকেন্ডে পুরো ওয়েবসাইটের পণ্য, ক্যাটাগরি আর তথ্য খুঁজে দিতে পারি। ভুল বানান, বাংলা-ইংরেজি মিশ্র লেখা, আর আনুমানিক নামও বুঝে উত্তর দেব।`;
   }
   const trainHit=searchAITraining(q);
   if(trainHit&&trainHit.answer){return `<strong>💡 ${trainHit.question}:</strong><br><br>${trainHit.answer}`;}
@@ -1457,10 +1648,29 @@ function addAIMsg(txt,cls,isHTML){
 
 // ===== MANUAL PRODUCT TEMPLATE =====
 function fillProdTemplate(){
-  const tpl=`{"nm":"পণ্যের নাম এখানে লিখুন","pr":999,"op":1500,"cat":"অন্যান্য","emoji":"📦","desc":"পণ্যের বিস্তারিত বিবরণ এখানে লিখুন। মান, বৈশিষ্ট্য উল্লেখ করুন।","stk":50,"feat":false,"images":["Hadia-Product-Logo.jpg"],"vars":[{"nm":"লাল","type":"color","pr":0},{"nm":"নীল","type":"color","pr":0},{"nm":"M","type":"size","pr":0},{"nm":"L","type":"size","pr":100}],"tags":["পণ্য ক্যাটাগরি","ইংরেজি নাম","বাংলা কীওয়ার্ড"]}`;
+  const tpl=`{
+  "nm": "পণ্যের নাম এখানে লিখুন",
+  "pr": 999,
+  "op": 1500,
+  "cat": "অন্যান্য",
+  "emoji": "📦",
+  "desc": "পণ্যের বিস্তারিত বিবরণ এখানে লিখুন। মান, বৈশিষ্ট্য উল্লেখ করুন।",
+  "stk": 50,
+  "feat": false,
+  "images": [
+    "https://raw.githubusercontent.com/user/repo/main/image.jpg"
+  ],
+  "vars": [
+    {"nm": "লাল", "type": "color", "pr": 0},
+    {"nm": "নীল", "type": "color", "pr": 0},
+    {"nm": "M",   "type": "size",  "pr": 0},
+    {"nm": "L",   "type": "size",  "pr": 100}
+  ],
+  "tags": ["পণ্য ক্যাটাগরি", "ইংরেজি নাম", "বাংলা কীওয়ার্ড"]
+}`;
   const el=document.getElementById('bulkProdTxt');
   if(el){el.value=tpl;el.focus();}
-  showToast('📋 টেমপ্লেট বসানো হয়েছে! পরিবর্তন করে যোগ করুন।');
+  showToast('📋 মাল্টি-লাইন টেমপ্লেট বসানো হয়েছে!');
 }
 
 // ===== AI TRAINING FUNCTIONS =====
@@ -1489,14 +1699,45 @@ function delAITraining(fbKey){
   renderAITrainList();showToast('🗑️ মুছে ফেলা হয়েছে');
 }
 
+// ===== ADMIN SIDEBAR TOGGLE =====
+function toggleAdmSidebar(){
+  const sb=document.getElementById('admSidebar'),ov=document.getElementById('admOverlay');
+  if(sb){sb.classList.toggle('open');if(ov)ov.classList.toggle('open');}
+}
+function closeAdmSidebar(){
+  const sb=document.getElementById('admSidebar'),ov=document.getElementById('admOverlay');
+  if(sb){sb.classList.remove('open');if(ov)ov.classList.remove('open');}
+}
+function updateAdmDateTime(){
+  const el=document.getElementById('admDateTime');
+  if(el)el.textContent=new Date().toLocaleString('en-US',{weekday:'short',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit',hour12:true});
+}
+setInterval(updateAdmDateTime,60000);
+
 // ===== TOAST =====
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.style.display='block';setTimeout(()=>t.style.display='none',2800);}
+
+// ===== MANUAL PRODUCTS MERGE =====
+window.MANUAL_PRODUCTS=window.MANUAL_PRODUCTS||[];
+function mergeManualProducts(){
+  if(!window.MANUAL_PRODUCTS||!window.MANUAL_PRODUCTS.length)return;
+  window.MANUAL_PRODUCTS.forEach(obj=>{
+    try{
+      const p=parseManualProductLine(JSON.stringify(obj));
+      if(p&&!prods.find(x=>x.nm===p.nm)){
+        p.id=p.id||Date.now()+Math.floor(Math.random()*9999);
+        prods.push(p);
+      }
+    }catch(e){}
+  });
+}
 
 // ===== INIT =====
 function init(){
   renderCats();renderFeat();renderHomeShop();renderShop();renderCatFilters();
   updCart();renderDash();renderAdmProds();renderAdmOrds();renderAdmCats();updCatSel();
-  initFirebase();
+  updateAdmDateTime();
+  initFirebase();startAdmClock();
 }
 init();
 </script>
@@ -1594,7 +1835,7 @@ window.addEventListener('DOMContentLoaded',()=>{
   if(vWrap && VOUCHER_LOGO){
 
       vWrap.innerHTML =
-      `<img src="Hadia-Product-Logo.jpg"
+      `<img src="${VOUCHER_LOGO}"
       style="width:100%;
       height:100%;
       object-fit:contain">`;
@@ -1658,5 +1899,55 @@ window.addEventListener('DOMContentLoaded',()=>{
 });
 </script>
 
+<script>
+// =====================================================================
+// ====== ম্যানুয়াল প্রোডাক্ট — সরাসরি HTML ফাইলে পেস্ট করুন ========
+// =====================================================================
+// নিচের MANUAL_PRODUCTS array-তে আপনার প্রোডাক্ট JSON পেস্ট করুন।
+// পেজ রিলোড দিলে অটো লোড হবে। Firebase-এর সাথে মার্জ হবে।
+//
+// GitHub raw image URL ব্যবহার করুন:
+// "images": ["https://raw.githubusercontent.com/user/repo/main/img.jpg"]
+// =====================================================================
+window.MANUAL_PRODUCTS = [
+
+  // ===== এখানে আপনার প্রোডাক্ট যোগ করুন =====
+  // উদাহরণ (এই কমেন্ট ব্লক মুছে নিজের পণ্য যোগ করুন):
+  /*
+  {
+    "nm": "পণ্যের নাম",
+    "pr": 999,
+    "op": 1500,
+    "cat": "অন্যান্য",
+    "emoji": "📦",
+    "desc": "পণ্যের বিস্তারিত বিবরণ।",
+    "stk": 50,
+    "feat": false,
+    "images": [
+      "https://raw.githubusercontent.com/user/repo/main/image.jpg"
+    ],
+    "vars": [
+      {"nm": "লাল", "type": "color", "pr": 0},
+      {"nm": "নীল", "type": "color", "pr": 0},
+      {"nm": "M",   "type": "size",  "pr": 0},
+      {"nm": "L",   "type": "size",  "pr": 100}
+    ],
+    "tags": ["কীওয়ার্ড১", "কীওয়ার্ড২", "keyword3"]
+  }
+  */
+
+];
+// =====================================================================
+// স্বয়ংক্রিয় মার্জ — এর নিচে পরিবর্তন করবেন না
+// =====================================================================
+if(typeof mergeManualProducts==='function'&&window.MANUAL_PRODUCTS.length>0){
+  mergeManualProducts();
+  if(typeof renderFeat==='function'){renderFeat();renderHomeShop();renderShop();}
+}
+</script>
 </body>
 </html>
+  </div><!-- /adm-main-content -->
+</div><!-- /adm-layout -->
+</div><!-- /page-admin -->
+
