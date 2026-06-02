@@ -61,7 +61,7 @@ nav button.act::after{content:'';position:absolute;bottom:4px;left:50%;transform
 .srch-btn{background:var(--gr);border:none;color:#fff;width:28px;height:28px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .cart-btn{position:relative;background:var(--gr);border:none;color:#fff;width:42px;height:42px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(233,30,140,.35);transition:.2s}
 .cart-btn:hover{transform:scale(1.06)}
-.cart-n{position:absolute;top:-4px;right:-4px;background:#f44336;color:#fff;border-radius:50%;width:18px;height:18px;font-size:10px;display:flex;align-items:center;justify-content:center;font-weight:700;border:2px solid #fff}
+.cart-n{position:absolute;top:-4px;right:-4px;background:#000000;color:#fff;border-radius:50%;width:18px;height:18px;font-size:10px;display:flex;align-items:center;justify-content:center;font-weight:700;border:2px solid #fff}
 .page{display:none;padding-top:66px;min-height:100vh}.page.active{display:block}
 .sec-ttl{font-size:20px;font-weight:800;margin-bottom:22px}
 .sec-ttl-inner{display:inline-flex;flex-direction:column;gap:4px}
@@ -281,25 +281,25 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 <!-- VOUCHER TEMPLATE -->
 <div id="vTpl" style="position:fixed;left:-9999px;top:0;width:560px;background:#fff;font-family:'Segoe UI',Tahoma,Arial,sans-serif;display:none">
   <!-- ✅ HEADER — Black & Cyan Gradient -->
-  <div style="background:linear-gradient(135deg,#0a0a0a 0%,#0d1f2d 45%,#003d4d 80%,#005f6e 100%);padding:22px 26px;display:flex;align-items:center;gap:16px;position:relative;overflow:hidden">
+  <div style="background:#000000;padding:22px 26px;display:flex;align-items:center;gap:16px;position:relative;overflow:hidden">
     <!-- subtle shine line -->
-    <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,#00e5ff,transparent);opacity:.7"></div>
+    <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,#e91e8c,transparent);opacity:.7"></div>
     <!-- ✅ লোগো — মূল পেজের লোগো সিঙ্ক হবে JS থেকে -->
     <div id="vLogoWrap" style="width:62px;height:62px;background:rgba(255,255,255,.08);border:2px solid rgba(0,229,255,.35);border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden"></div>
     <div style="flex:1">
       <div style="color:#fff;font-size:18px;font-weight:900;letter-spacing:1.5px;text-shadow:0 0 18px rgba(0,229,255,.4)">HADIA PRODUCT</div>
-      <div style="color:#00e5ff;font-size:10px;margin-top:3px;font-weight:600;letter-spacing:.5px">A Digital Online Shop</div>
+      <div style="color:#e91e8c;font-size:10px;margin-top:3px;font-weight:600;letter-spacing:.5px">A Digital Online Shop</div>
       <div style="color:rgba(255,255,255,.5);font-size:9px;margin-top:3px">hadiaproduct0@gmail.com | facebook.com/hadiaproduct0</div>
     </div>
-    <div style="background:rgba(0,229,255,.12);border:1.5px solid rgba(0,229,255,.45);border-radius:18px;padding:7px 14px;color:#00e5ff;font-size:10px;font-weight:700;white-space:nowrap;text-shadow:0 0 8px rgba(0,229,255,.5)">অর্ডার ভাউচার</div>
+    <div style="background:rgba(0,229,255,.12);border:1.5px solid rgba(0,229,255,.45);border-radius:18px;padding:7px 14px;color:#e91e8c;font-size:10px;font-weight:700;white-space:nowrap;text-shadow:0 0 8px rgba(0,229,255,.5)">অর্ডার ভাউচার</div>
     <!-- bottom glow line -->
     <div style="position:absolute;bottom:0;left:0;right:0;height:1.5px;background:linear-gradient(90deg,transparent,rgba(0,229,255,.6),transparent)"></div>
   </div>
 
   <!-- INFO GRID -->
-  <div style="background:#f8f9fc;border-left:4px solid #00bcd4;margin:16px;border-radius:10px;padding:14px 16px">
+  <div style="background:#f8f9fc;border-left:4px solid #e91e8c;margin:16px;border-radius:10px;padding:14px 16px">
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-      <div><div style="font-size:9px;color:#9ca3af;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">অর্ডার নম্বর</div><div id="v-id" style="font-size:14px;font-weight:800;color:#006d82"></div></div>
+      <div><div style="font-size:9px;color:#9ca3af;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">অর্ডার নম্বর</div><div id="v-id" style="font-size:14px;font-weight:800;color:#e91e8c"></div></div>
       <div><div style="font-size:9px;color:#9ca3af;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">তারিখ</div><div id="v-date" style="font-size:12px;font-weight:600;color:#1a1a2e"></div></div>
       <div><div style="font-size:9px;color:#9ca3af;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">গ্রাহকের নাম</div><div id="v-name" style="font-size:12px;font-weight:600;color:#1a1a2e"></div></div>
       <div><div style="font-size:9px;color:#9ca3af;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">ফোন নম্বর</div><div id="v-phone" style="font-size:12px;font-weight:600;color:#1a1a2e"></div></div>
@@ -310,10 +310,10 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 
   <!-- ITEMS TABLE -->
   <div style="margin:0 16px">
-    <div style="background:linear-gradient(135deg,#0d1f2d,#005f6e);border-radius:8px 8px 0 0;padding:10px 14px;display:grid;grid-template-columns:1fr 60px 90px;gap:8px">
-      <div style="color:#00e5ff;font-size:11px;font-weight:700">পণ্যের নাম</div>
-      <div style="color:#00e5ff;font-size:11px;font-weight:700;text-align:center">পরিমাণ</div>
-      <div style="color:#00e5ff;font-size:11px;font-weight:700;text-align:right">মূল্য</div>
+    <div style="background:linear-gradient(135deg,#383636,#000000);border-radius:8px 8px 0 0;padding:10px 14px;display:grid;grid-template-columns:1fr 60px 90px;gap:8px">
+      <div style="color:#e91e8c;font-size:11px;font-weight:700">পণ্যের নাম</div>
+      <div style="color:#e91e8c;font-size:11px;font-weight:700;text-align:center">পরিমাণ</div>
+      <div style="color:#e91e8c;font-size:11px;font-weight:700;text-align:right">মূল্য</div>
     </div>
     <div id="v-items" style="border:1.5px solid #e5e7eb;border-top:none;border-radius:0 0 8px 8px;overflow:hidden"></div>
   </div>
@@ -322,13 +322,13 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
   <div style="margin:14px 16px;background:#f8f9fc;border-radius:10px;padding:14px 16px">
     <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #e5e7eb;font-size:12px;color:#6b7280"><span>পণ্যের মোট</span><span id="v-sub" style="font-weight:600"></span></div>
     <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #e5e7eb;font-size:12px;color:#6b7280"><span>ডেলিভারি চার্জ</span><span id="v-del" style="font-weight:600"></span></div>
-    <div style="display:flex;justify-content:space-between;padding:10px 0 4px;font-size:16px;font-weight:800;color:#1a1a2e"><span>সর্বমোট</span><span id="v-tot" style="color:#006d82"></span></div>
+    <div style="display:flex;justify-content:space-between;padding:10px 0 4px;font-size:16px;font-weight:800;color:#1a1a2e"><span>সর্বমোট</span><span id="v-tot" style="color:#e91e8c"></span></div>
   </div>
 
   <!-- ✅ FOOTER — Black & Cyan Gradient -->
-  <div style="background:linear-gradient(135deg,#d1002a 0%,#470606 55%,#080808 100%);padding:18px 24px;text-align:center;margin-top:10px;position:relative;overflow:hidden">
+  <div style="background:#000000;padding:18px 24px;text-align:center;margin-top:10px;position:relative;overflow:hidden">
     <div style="position:absolute;top:0;left:0;right:0;height:1.5px;background:linear-gradient(90deg,transparent,rgba(0,229,255,.6),transparent)"></div>
-    <div style="color:#00e5ff;font-size:12px;font-weight:800;margin-bottom:5px;letter-spacing:.5px;text-shadow:0 0 10px rgba(0,229,255,.5)">ধন্যবাদ কেনাকাটার জন্য!</div>
+    <div style="color:#e91e8c;font-size:12px;font-weight:800;margin-bottom:5px;letter-spacing:.5px;text-shadow:0 0 10px rgba(0,229,255,.5)">ধন্যবাদ কেনাকাটার জন্য! 🙏</div>
     <div style="color:rgba(255,255,255,.8);font-size:10px">📞 +880 1704 598 772 | +880 1633 924 359</div>
     <div style="color:rgba(255,255,255,.5);font-size:9px;margin-top:4px">hadiaproduct0@gmail.com | facebook.com/hadiaproduct0 | WA: 01867-591785</div>
   </div>
@@ -621,8 +621,8 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 
 <!-- WA FLOAT -->
 <div class="wa-float">
-  <div class="wa-tip" id="waTip"></div>
-  <div style="position:relative"><div class="wa-ring">""</div>
+  <div class="wa-tip" id="waTip"> </div>
+  <div style="position:relative"><div class="wa-ring"></div>
     <a href="https://wa.me/8801867591785" target="_blank" class="wa-btn" onmouseenter="document.getElementById('waTip').style.display='block'" onmouseleave="document.getElementById('waTip').style.display='none'">
       <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
     </a>
@@ -631,7 +631,7 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 
 <!-- AI FLOAT — Hadia Product AI Logo -->
 <div class="ai-float">
-  <button class="ai-btn" onclick="toggleAI()" title="">
+  <button class="ai-btn" onclick="toggleAI()">
     <img src="Hadia-Product-AI-Logo.png" alt="AI" onerror="this.style.display='none';this.parentElement.innerHTML='<span style=\'font-size:28px;font-weight:900;color:#fff;font-style:italic\'>H</span><span style=\'position:absolute;bottom:2px;right:2px;background:#fff;color:var(--pk);font-size:8px;font-weight:800;padding:1px 4px;border-radius:6px\'>AI</span>'">
   </button>
 </div>
@@ -681,7 +681,7 @@ function onFBReady(){
     currentUser=user;
     const lp=document.getElementById('adminLogin'),ap=document.getElementById('adminPanel');
     if(lp&&ap){lp.style.display=user?'none':'flex';ap.style.display=user?'block':'none';}
-    if(user){loadFromFirebase();const s=document.getElementById('fbStatus');if(s)s.style.display='block';}
+    loadFromFirebase();const s=document.getElementById('fbStatus');if(s)s.style.display=user?'block':'none';
   });
 }
 if(window._fb){onFBReady();}
@@ -838,8 +838,8 @@ function renderCoSum(){const sub=cart.reduce((s,x)=>s+x.pr*x.qty,0);const dist=(
 
 // ===== EMAIL (EmailJS) =====
 // ⚙️ EmailJS কনফিগ — আপনার Service ID ও Template ID দিন
-const EMAILJS_SERVICE_ID  = 'YOUR_SERVICE_ID';   // EmailJS → Email Services
-const EMAILJS_TEMPLATE_ID = 'YOUR_TEMPLATE_ID';  // EmailJS → Email Templates
+const EMAILJS_SERVICE_ID  = 'service_zk82hpr';   // EmailJS → Email Services
+const EMAILJS_TEMPLATE_ID = 'template_3xje7yf';  // EmailJS → Email Templates
 const ADMIN_EMAIL         = 'hadiaproduct0@gmail.com'; // অ্যাডমিনের ইমেইল
 
 async function sendAutoEmail(ord) {
@@ -903,7 +903,7 @@ async function dlPDF(){
     if(logoSrc){
       vLogo.innerHTML=`<img src="${logoSrc}" style="width:100%;height:100%;object-fit:contain;" crossorigin="anonymous">`;
     } else {
-      vLogo.innerHTML=`<div style="width:100%;height:100%;background:linear-gradient(135deg,#0d1f2d,#005f6e);display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:900;color:#00e5ff;font-style:italic;text-shadow:0 0 12px rgba(0,229,255,.6)">H</div>`;
+      vLogo.innerHTML=`<div style="width:100%;height:100%;background:linear-gradient(135deg,#0d1f2d,#f44336);display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:900;color:#e91e8c;font-style:italic;text-shadow:0 0 12px rgba(0,229,255,.6)">H</div>`;
     }
   }
   document.getElementById('v-id').textContent=o.id;
@@ -1180,5 +1180,39 @@ const PRODUCTS_DATA = [
 // ✅ পণ্য যোগের পর অ্যাডমিন প্যানেলে গিয়ে
 // ড্যাশবোর্ড → "PRODUCTS_DATA সিঙ্ক" বাটন চাপুন।
 </script>
+
+<!-- ===============================
+EDITABLE 30 PRODUCT TEMPLATE START
+আপনি নিচের অংশে সহজে পণ্য, ছবি, ভেরিয়েন্ট পরিবর্তন করতে পারবেন
+=============================== -->
+<script>
+window.PRODUCTS_DATA = window.PRODUCTS_DATA || [];
+if(PRODUCTS_DATA.length===0){
+for(let i=1;i<=30;i++){
+PRODUCTS_DATA.push({
+id:i,
+nm:`Product ${i}`,
+cat:'অন্যান্য',
+pr:1000,
+old:1200,
+stk:true,
+desc:'এখানে পণ্যের বিবরণ লিখুন',
+imgs:[
+`product${i}-1.jpg`,
+`product${i}-2.jpg`,
+`product${i}-3.jpg`,
+`product${i}-4.jpg`,
+`product${i}-5.jpg`
+],
+vars:[
+{name:'সাইজ',opts:['ছোট','মাঝারি','বড়']},
+{name:'রং',opts:['কালো','সাদা','নীল']}
+]
+});
+}
+}
+</script>
+<!-- EDITABLE 30 PRODUCT TEMPLATE END -->
 </body>
+
 </html>
