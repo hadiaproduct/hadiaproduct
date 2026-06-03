@@ -976,7 +976,7 @@ async function setHeroBg(inp){const f=inp.files[0];if(!f)return;const r=new File
 
 // ===== CATEGORIES =====
 function renderCats(){document.getElementById('catGrid').innerHTML=cats.map(c=>`<div class="cat-card" onclick="goToCat('${c.nm}')"><div class="cat-icon">${c.emoji}</div><div class="cat-nm">${c.nm}</div></div>`).join('');}
-function goToCat(nm){curCat=nm;showPg('shop');setNav(document.querySelectorAll('nav button')[1]);setTimeout(()=>{document.querySelectorAll('.filter-bar .fb-btn').forEach(b=>{b.classList.remove('act');if(b.textContent.includes(nm))b.classList.add('act');});renderShop();},50);}
+function goToCat(nm){curCat=nm.trim();showPg('shop');setNav(document.querySelectorAll('nav button')[1]);setTimeout(()=>{const catLower=curCat.toLowerCase();document.querySelectorAll('.filter-bar .fb-btn').forEach(b=>{b.classList.remove('act');if(b.textContent.trim().toLowerCase().includes(catLower))b.classList.add('act');});renderShop();},50);}
 function renderCatFilters(){document.getElementById('catFilters').innerHTML=cats.map(c=>`<button class="fb-btn" onclick="setCat('${c.nm}',this)">${c.emoji} ${c.nm}</button>`).join('');}
 function setCat(cat,el){curCat=cat;document.querySelectorAll('.filter-bar .fb-btn').forEach(b=>b.classList.remove('act'));if(el)el.classList.add('act');renderShop();}
 function updCatSel(){const s=document.getElementById('pCat');if(!s)return;s.innerHTML=cats.map(c=>`<option value="${c.nm}">${c.emoji} ${c.nm}</option>`).join('');}
@@ -986,7 +986,19 @@ function starHTML(rat){return'★'.repeat(Math.floor(rat))+'☆'.repeat(5-Math.f
 function renderFeat(){document.getElementById('featGrid').innerHTML=prods.filter(p=>p.feat).slice(0,4).map(prodCard).join('')||'<p style="color:var(--lgray);padding:20px">কোনো ফিচার্ড পণ্য নেই</p>';}
 function renderHomeShop(){const list=homeExp?prods:prods.slice(0,4);document.getElementById('homeShopGrid').innerHTML=list.map(prodCard).join('');document.getElementById('seeMoreBtn').textContent=homeExp?'↑ কম দেখুন':'আরো দেখুন ↓';}
 function toggleHomeShop(){homeExp=!homeExp;renderHomeShop();}
-function renderShop(){let list=curCat==='all'?[...prods]:prods.filter(p=>p.cat===curCat);const q=document.getElementById('srchInp').value.trim();if(q){const fz=fuzzySearchProds(q);list=curCat==='all'?fz:fz.filter(p=>p.cat===curCat);}document.getElementById('shopGrid').innerHTML=list.length?list.map(prodCard).join(''):`<p style="color:var(--lgray);grid-column:1/-1;text-align:center;padding:50px;font-size:15px">😔 কোনো পণ্য পাওয়া যায়নি</p>`;}
+function renderShop(){
+  const q=document.getElementById('srchInp').value.trim();
+  let list;
+  if(curCat==='all'){
+    list=q?fuzzySearchProds(q):[...prods];
+  } else {
+    // trim + lowercase match — whitespace বা case difference ঠিক করো
+    const catLower=curCat.trim().toLowerCase();
+    list=prods.filter(p=>(p.cat||'').trim().toLowerCase()===catLower);
+    if(q){const fz=new Set(fuzzySearchProds(q).map(p=>p.id));list=list.filter(p=>fz.has(p.id));}
+  }
+  document.getElementById('shopGrid').innerHTML=list.length?list.map(prodCard).join(''):`<p style="color:var(--lgray);grid-column:1/-1;text-align:center;padding:50px;font-size:15px">😔 কোনো পণ্য পাওয়া যায়নি</p>`;
+}
 function doSearch(){showPg('shop');setNav(document.querySelectorAll('nav button')[1]);curCat='all';document.querySelectorAll('.filter-bar .fb-btn').forEach(b=>b.classList.remove('act'));document.getElementById('allFb')?.classList.add('act');setTimeout(renderShop,50);}
 function prodCard(p){const st=starHTML(p.rat||0);const img=p.imgs&&p.imgs[0]?`<img src="${p.imgs[0]}" style="width:100%;height:100%;object-fit:cover" alt="">`:`<span class="prod-emoji">${p.emoji}</span>`;return`<div class="prod-card" onclick="openProd(${p.id})">${p.feat?'<div class="prod-badge">⭐ ফিচার্ড</div>':''}<div class="prod-img-w">${img}</div><div class="prod-info"><div class="prod-nm">${p.nm}</div><div><span class="prod-pr">৳${p.pr.toLocaleString()}</span>${p.op?`<span class="prod-old">৳${p.op.toLocaleString()}</span>`:''}</div><div class="prod-rat">${st} <span style="color:var(--lgray)">(${p.rvs||0})</span></div><div class="prod-stk ${p.stk>0?'in-s':'out-s'}">${p.stk>0?'✅ স্টকে আছে':'❌ স্টক শেষ'}</div><button class="adc-btn" onclick="event.stopPropagation();addCart(${p.id})" ${p.stk===0?'disabled':''}>🛒 কার্টে যোগ করুন</button></div></div>`;}
 function sortProds(v){if(v==='pl')prods.sort((a,b)=>a.pr-b.pr);else if(v==='ph')prods.sort((a,b)=>b.pr-a.pr);else if(v==='rt')prods.sort((a,b)=>b.rat-a.rat);renderShop();renderHomeShop();renderFeat();}
@@ -1071,6 +1083,18 @@ function placeOrder(){
     const {error:oErr}=await _supa.from('orders').insert({id:oid,nm:ord.nm,addr:ord.addr,ph:ord.ph,items:ord.items,sub:ord.sub,del:ord.del,tot:ord.tot,pay:ord.pay,note:ord.note||'',date:ord.date,time:ord.time,status:'pending',timestamp:ord.timestamp});
     if(oErr)console.error('Order save error:',oErr);
     else console.log('✅ অর্ডার সেভ হয়েছে:',oid);
+  })();
+  // ✅ Stock deduct — প্রতিটি cart item এর স্টক কমাও
+  (async()=>{
+    for(const item of cart){
+      const prod=prods.find(p=>p.id===item.id);
+      if(!prod)continue;
+      const newStk=Math.max(0,prod.stk-item.qty);
+      prod.stk=newStk; // local update
+      await _supa.from('prods').update({stk:newStk}).eq('id',prod.id);
+    }
+    // UI refresh
+    renderFeat();renderHomeShop();renderShop();renderAdmProds();
   })();
   // ✅ অর্ডার ইমেইল পাঠানো
   sendAutoEmail(ord);
@@ -1346,10 +1370,26 @@ function addAIMsg(txt,cls,isHTML){const el=document.getElementById('aiMsgs');con
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.style.display='block';setTimeout(()=>t.style.display='none',2800);}
 
 // ===== INIT =====
-function init(){
+async function init(){
   renderCats();renderFeat();renderHomeShop();renderShop();renderCatFilters();updCart();
-  // ✅ Supabase থেকে public data লোড করো (login ছাড়াই)
+  // ✅ Public data (login ছাড়াই পণ্য দেখা যাবে)
   loadPublicData();
+  // ✅ রিফ্রেশের পরেও লগইন ধরে রাখো
+  // onAuthStateChange দেরিতে fire করে, তাই getSession দিয়ে আগেই চেক করো
+  try {
+    const { data: { session } } = await _supa.auth.getSession();
+    if (session && session.user && !_authLoaded) {
+      _authLoaded = true;
+      window._supaUser = session.user;
+      const lp = document.getElementById('adminLogin');
+      const ap = document.getElementById('adminPanel');
+      const s = document.getElementById('fbStatus');
+      if (lp) lp.style.display = 'none';
+      if (ap) ap.style.display = 'block';
+      if (s) s.style.display = 'block';
+      loadFromSupabase();
+    }
+  } catch(e) { console.error('getSession error:', e); }
 }
 
 init();
