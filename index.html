@@ -785,9 +785,82 @@ function finalizePhone(el){el.value=bnToEn(el.value).replace(/[^0-9]/g,'');}
 function calcDel(){const d=(document.getElementById('coDist')?.value||'').trim().toLowerCase();return(d.includes('ঢাকা')||d.includes('dhaka'))?70:130;}
 
 // ===== NAV =====
-function showPg(p){prevPg=document.querySelector('.page.active')?.id?.replace('page-','')||'home';document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));document.getElementById('page-'+p).classList.add('active');if(p==='cart')renderCart();if(p==='checkout')renderCoSum();if(p==='admin'){renderDash();renderAdmProds();renderAdmOrds();renderAdmCats();}window.scrollTo(0,0);}
-function setNav(el){document.querySelectorAll('nav button').forEach(b=>b.classList.remove('act'));el.classList.add('act');}
-function goBack(){showPg(prevPg==='detail'?'shop':prevPg);}
+let currentPage='home';
+
+function updateNavByPage(page){
+  document.querySelectorAll('nav button').forEach(b=>b.classList.remove('act'));
+
+  const btns=document.querySelectorAll('nav button');
+
+  if(page==='home') btns[0]?.classList.add('act');
+  else if(page==='shop' || page==='detail') btns[1]?.classList.add('act');
+  else if(page==='contact') btns[2]?.classList.add('act');
+  else if(page==='admin') btns[3]?.classList.add('act');
+}
+
+function showPg(p,addHistory=true){
+
+  prevPg=currentPage;
+  currentPage=p;
+
+  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+
+  const page=document.getElementById('page-'+p);
+  if(page) page.classList.add('active');
+
+  updateNavByPage(p);
+
+  if(addHistory){
+    history.pushState(
+      {page:p},
+      '',
+      '#'+p
+    );
+  }
+
+  if(p==='cart') renderCart();
+  if(p==='checkout') renderCoSum();
+
+  if(p==='admin'){
+    renderDash();
+    renderAdmProds();
+    renderAdmOrds();
+    renderAdmCats();
+  }
+
+  window.scrollTo(0,0);
+}
+
+window.addEventListener('popstate',function(e){
+
+  const page=
+    (e.state && e.state.page)
+    || location.hash.replace('#','')
+    || 'home';
+
+  showPg(page,false);
+});
+
+window.addEventListener('load',function(){
+
+  const page=
+    location.hash.replace('#','')
+    || 'home';
+
+  history.replaceState(
+    {page:page},
+    '',
+    '#'+page
+  );
+
+  showPg(page,false);
+});
+
+function setNav(el){}
+
+function goBack(){
+  history.back();
+}
 
 // ===== LOGO =====
 function applyLogo(url){const li=document.querySelector('.logo img');if(li){li.src=url;li.style.display='block';}}
