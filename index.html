@@ -715,7 +715,7 @@ async function loadFromSupabase(){
   // ── PRODUCTS ──
   const {data:prodsData}=await _supa.from('prods').select('*').order('id');
   if(prodsData&&prodsData.length){
-    prods=prodsData.map(r=>({...r,imgs:r.imgs||[],vars:r.vars||[],keywords:r.keywords||[]})).sort((a,b)=>a.id-b.id);
+    prods=prodsData.map(r=>({...r,desc:r.product_desc||'',imgs:r.imgs||[],vars:r.vars||[],keywords:r.keywords||[]})).sort((a,b)=>a.id-b.id);
   } else if(typeof PRODUCTS_DATA!=='undefined'&&PRODUCTS_DATA.length){
     prods=[...PRODUCTS_DATA].map((p,i)=>({id:p.id||(Date.now()+i),rat:0,rvs:0,...p}));
   }
@@ -775,22 +775,29 @@ async function loadFromSupabase(){
 
 // ✅ Page load-এ public data লোড (login ছাড়াই পণ্য দেখা যাবে)
 async function loadPublicData(){
-  const {data:prodsData}=await _supa.from('prods').select('*').order('id');
-  if(prodsData&&prodsData.length){
-    prods=prodsData.map(r=>({...r,imgs:r.imgs||[],vars:r.vars||[],keywords:r.keywords||[]}));
-    renderFeat();renderHomeShop();renderShop();renderAdmProds();renderDash();
-  } else if(typeof PRODUCTS_DATA!=='undefined'&&PRODUCTS_DATA.length&&!prods.length){
-    prods=[...PRODUCTS_DATA].map((p,i)=>({id:p.id||(Date.now()+i),rat:0,rvs:0,...p}));
-    renderFeat();renderHomeShop();renderShop();
-  }
-  const {data:catsData}=await _supa.from('cats').select('*').order('id');
-  if(catsData&&catsData.length){cats=catsData.map(r=>({nm:r.nm,emoji:r.emoji}));renderCats();renderCatFilters();updCatSel();}
-  const {data:rvsData}=await _supa.from('reviews').select('*');
-  if(rvsData){rvStore={};rvsData.forEach(r=>{if(!rvStore[r.prod_id])rvStore[r.prod_id]=[];rvStore[r.prod_id].push({nm:r.nm,txt:r.txt,stars:r.stars,ok:r.ok,date:r.date,db_id:r.id});});Object.keys(rvStore).forEach(pid=>updateProdRating(pid,false));}
-  const {data:aiData}=await _supa.from('ai_training').select('*').order('id');
-  if(aiData)aiTraining=aiData.map(r=>({id:r.id,q:r.q,a:r.a}));
-  const {data:settingsData}=await _supa.from('settings').select('*');
-  if(settingsData){const logo=settingsData.find(s=>s.key==='logo');if(logo){applyLogo(logo.value);logoUrl=logo.value;}const hero=settingsData.find(s=>s.key==='heroBg');if(hero){const bg=document.getElementById('heroBg');if(bg)bg.style.backgroundImage=`url(${hero.value})`;}}
+  try{
+    const {data:prodsData,error:pe}=await _supa.from('prods').select('*').order('id');
+    if(pe)console.error('prods load error:',pe);
+    if(prodsData&&prodsData.length){
+      prods=prodsData.map(r=>({...r,desc:r.product_desc||'',imgs:r.imgs||[],vars:r.vars||[],keywords:r.keywords||[]}));
+      renderFeat();renderHomeShop();renderShop();renderAdmProds();renderDash();
+    } else if(typeof PRODUCTS_DATA!=='undefined'&&PRODUCTS_DATA.length&&!prods.length){
+      prods=[...PRODUCTS_DATA].map((p,i)=>({id:p.id||(Date.now()+i),rat:0,rvs:0,...p}));
+      renderFeat();renderHomeShop();renderShop();
+    }
+    const {data:catsData,error:ce}=await _supa.from('cats').select('*').order('id');
+    if(ce)console.error('cats load error:',ce);
+    if(catsData&&catsData.length){cats=catsData.map(r=>({nm:r.nm,emoji:r.emoji}));renderCats();renderCatFilters();updCatSel();}
+    const {data:rvsData,error:re}=await _supa.from('reviews').select('*');
+    if(re)console.error('reviews load error:',re);
+    if(rvsData){rvStore={};rvsData.forEach(r=>{if(!rvStore[r.prod_id])rvStore[r.prod_id]=[];rvStore[r.prod_id].push({nm:r.nm,txt:r.txt,stars:r.stars,ok:r.ok,date:r.date,db_id:r.id});});Object.keys(rvStore).forEach(pid=>updateProdRating(pid,false));}
+    const {data:aiData,error:ae}=await _supa.from('ai_training').select('*').order('id');
+    if(ae)console.error('ai_training load error:',ae);
+    if(aiData)aiTraining=aiData.map(r=>({id:r.id,q:r.q,a:r.a}));
+    const {data:settingsData,error:se}=await _supa.from('settings').select('*');
+    if(se)console.error('settings load error:',se);
+    if(settingsData){const logo=settingsData.find(s=>s.key==='logo');if(logo){applyLogo(logo.value);logoUrl=logo.value;}const hero=settingsData.find(s=>s.key==='heroBg');if(hero){const bg=document.getElementById('heroBg');if(bg)bg.style.backgroundImage=`url(${hero.value})`;}}
+  }catch(err){console.error('loadPublicData error:',err);}
 }
 
 // ===== STATE =====
@@ -1101,8 +1108,10 @@ async function addProd(){
   const id=Date.now();let imgUrls=[];const imgs=pendImgs.filter(Boolean);
   if(imgs.length>0){showToast('📸 ছবি আপলোড...');try{for(let i=0;i<imgs.length;i++){const base64=imgs[i].split(',')[1];const byteArr=Uint8Array.from(atob(base64),c=>c.charCodeAt(0));const path=`prods/${id}/img_${i}`;const{error}=await _supa.storage.from('assets').upload(path,new Blob([byteArr],{type:'image/jpeg'}),{upsert:true});if(!error){const{data:pub}=_supa.storage.from('assets').getPublicUrl(path);imgUrls.push(pub.publicUrl);}else{imgUrls.push(imgs[i]);}}}catch(e){imgUrls=imgs;}}else{imgUrls=imgs;}
   const kw=document.getElementById('pKw').value.split(',').map(k=>k.trim()).filter(Boolean);
-  const prod={id,nm,pr,op:parseInt(document.getElementById('pOp').value)||0,cat:document.getElementById('pCat').value,desc:document.getElementById('pDesc').value.trim(),emoji:document.getElementById('pEmoji').value||'📦',stk:parseInt(document.getElementById('pStk').value)||100,feat:document.getElementById('pFeat').checked,rat:0,rvs:0,imgs:imgUrls,vars:[...pendVars],keywords:kw};
-  if(true){await _supa.from('prods').upsert({id,nm:prod.nm,pr:prod.pr,op:prod.op,cat:prod.cat,desc:prod.desc,emoji:prod.emoji,stk:prod.stk,feat:prod.feat,rat:0,rvs:0,imgs:prod.imgs,vars:prod.vars,keywords:prod.keywords});}
+  const descVal=document.getElementById('pDesc').value.trim();
+  const prod={id,nm,pr,op:parseInt(document.getElementById('pOp').value)||0,cat:document.getElementById('pCat').value,desc:descVal,emoji:document.getElementById('pEmoji').value||'📦',stk:parseInt(document.getElementById('pStk').value)||100,feat:document.getElementById('pFeat').checked,rat:0,rvs:0,imgs:imgUrls,vars:[...pendVars],keywords:kw};
+  const {error:prodErr}=await _supa.from('prods').upsert({id,nm:prod.nm,pr:prod.pr,op:prod.op,cat:prod.cat,product_desc:descVal,emoji:prod.emoji,stk:prod.stk,feat:prod.feat,rat:0,rvs:0,imgs:prod.imgs,vars:prod.vars,keywords:prod.keywords});
+  if(prodErr){console.error('Prod save error:',prodErr);showToast('❌ সেভ হয়নি: '+prodErr.message);btn.disabled=false;btn.textContent='✅ পণ্য যোগ করুন';return;}
   prods.push(prod);renderFeat();renderHomeShop();renderShop();renderAdmProds();renderDash();
   ['pNm','pPr','pOp','pDesc','pEmoji','pStk','pKw'].forEach(id2=>document.getElementById(id2).value='');
   document.getElementById('pFeat').checked=false;document.getElementById('imgPvGrid').innerHTML='';document.getElementById('varList').innerHTML='';
@@ -1122,7 +1131,7 @@ function addProdsFromJSON(){
   arr.forEach(async p=>{
     const id=p.id||Date.now()+Math.floor(Math.random()*1000);
     const prod={id,nm:p.nm||'?',pr:p.pr||0,op:p.op||0,cat:p.cat||'অন্যান্য',desc:p.desc||'',emoji:p.emoji||'📦',stk:p.stk||100,feat:p.feat||false,rat:0,rvs:0,imgs:p.imgs||[],vars:p.vars||[],keywords:p.keywords||[]};
-    await _supa.from('prods').upsert(prod);
+    await _supa.from('prods').upsert({id:prod.id,nm:prod.nm,pr:prod.pr,op:prod.op,cat:prod.cat,product_desc:prod.desc||'',emoji:prod.emoji,stk:prod.stk,feat:prod.feat,rat:0,rvs:0,imgs:prod.imgs,vars:prod.vars,keywords:prod.keywords});
     prods.push(prod);
   });
   renderFeat();renderHomeShop();renderShop();renderAdmProds();renderDash();
@@ -1140,7 +1149,7 @@ async function syncProductsData(){
     const p=PRODUCTS_DATA[i];
     const id=p.id||(Date.now()+i);
     const prod={id,nm:p.nm||'?',pr:p.pr||0,op:p.op||0,cat:p.cat||'অন্যান্য',desc:p.desc||'',emoji:p.emoji||'📦',stk:p.stk||100,feat:p.feat||false,rat:0,rvs:0,imgs:p.imgs||[],vars:p.vars||[],keywords:p.keywords||[]};
-    await _supa.from('prods').upsert(prod);
+    await _supa.from('prods').upsert({id:prod.id,nm:prod.nm,pr:prod.pr,op:prod.op,cat:prod.cat,product_desc:prod.desc||'',emoji:prod.emoji,stk:prod.stk,feat:prod.feat,rat:0,rvs:0,imgs:prod.imgs,vars:prod.vars,keywords:prod.keywords});
   }
   showToast(`✅ ${PRODUCTS_DATA.length}টি পণ্য Supabase-এ সেভ হয়েছে!`);
 }
