@@ -24,21 +24,28 @@
 // ✅ Supabase Config
 const SUPABASE_URL = 'https://ahxfjacozfnwinqkhhwx.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFoeGZqYWNvemZud2lucWtoaHd4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1MDI0NzIsImV4cCI6MjA5NjA3ODQ3Mn0.RsXXIE7NjlJCTBpW6TzbA43_fQwX_GcQ9A0naFNBop4';
-const _supa = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const _supa = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+  auth: {
+    persistSession: true,
+    storageKey: 'hadia-admin-session',
+    storage: window.localStorage,
+    autoRefreshToken: true,
+    detectSessionInUrl: false
+  }
+});
 window._supa = _supa;
 
 // ✅ Supabase Auth State
+let _authLoaded = false;
 _supa.auth.onAuthStateChange((event, session) => {
   const user = session?.user || null;
   window._supaUser = user;
   const lp = document.getElementById('adminLogin'), ap = document.getElementById('adminPanel');
   if (lp && ap) { lp.style.display = user ? 'none' : 'flex'; ap.style.display = user ? 'block' : 'none'; }
   const s = document.getElementById('fbStatus'); if (s) s.style.display = user ? 'block' : 'none';
-  if (user) loadFromSupabase();
+  if (user && !_authLoaded) { _authLoaded = true; loadFromSupabase(); }
+  else if (!user) { _authLoaded = false; }
 });
-
-// ✅ Realtime subscriptions holder
-window._realtimeSubs = [];
 </script>
 
 <style>
@@ -753,7 +760,7 @@ async function loadFromSupabase(){
   _supa.channel('realtime-all')
     .on('postgres_changes',{event:'*',schema:'public',table:'prods'},async()=>{
       const {data}=await _supa.from('prods').select('*').order('id');
-      if(data)prods=data.map(r=>({...r,imgs:r.imgs||[],vars:r.vars||[],keywords:r.keywords||[]}));
+      if(data)prods=data.map(r=>({...r,desc:r.product_desc||'',imgs:r.imgs||[],vars:r.vars||[],keywords:r.keywords||[]}));
       renderFeat();renderHomeShop();renderShop();renderAdmProds();renderDash();
     })
     .on('postgres_changes',{event:'*',schema:'public',table:'orders'},async()=>{
@@ -797,6 +804,11 @@ async function loadPublicData(){
     const {data:settingsData,error:se}=await _supa.from('settings').select('*');
     if(se)console.error('settings load error:',se);
     if(settingsData){const logo=settingsData.find(s=>s.key==='logo');if(logo){applyLogo(logo.value);logoUrl=logo.value;}const hero=settingsData.find(s=>s.key==='heroBg');if(hero){const bg=document.getElementById('heroBg');if(bg)bg.style.backgroundImage=`url(${hero.value})`;}}
+    // Orders load (admin হলে দেখাবে)
+    const {data:ordsData,error:oe}=await _supa.from('orders').select('*').order('timestamp',{ascending:false});
+    if(oe)console.error('orders load error:',oe);
+    if(ordsData)orders=ordsData.map(r=>({...r,items:r.items||[]}));
+    renderAdmOrds();renderDash();
   }catch(err){console.error('loadPublicData error:',err);}
 }
 
@@ -1013,7 +1025,11 @@ function placeOrder(){
   const ord={id:oid,nm,addr:`${vil}, ${tha}, ${dis}`,ph,items:[...cart],sub,del,tot,pay:document.getElementById('payM').value,note:document.getElementById('coNote').value.trim(),date:now.toLocaleDateString('bn-BD'),time:now.toLocaleTimeString('bn-BD'),status:'pending',timestamp:Date.now()};
   orders.unshift(ord);lastOrd=ord;
   // ✅ Supabase-এ অর্ডার সেভ
-  _supa.from('orders').insert({id:oid,nm:ord.nm,addr:ord.addr,ph:ord.ph,items:ord.items,sub:ord.sub,del:ord.del,tot:ord.tot,pay:ord.pay,note:ord.note,date:ord.date,time:ord.time,status:'pending',timestamp:ord.timestamp});
+  (async()=>{
+    const {error:oErr}=await _supa.from('orders').insert({id:oid,nm:ord.nm,addr:ord.addr,ph:ord.ph,items:ord.items,sub:ord.sub,del:ord.del,tot:ord.tot,pay:ord.pay,note:ord.note||'',date:ord.date,time:ord.time,status:'pending',timestamp:ord.timestamp});
+    if(oErr)console.error('Order save error:',oErr);
+    else console.log('✅ অর্ডার সেভ হয়েছে:',oid);
+  })();
   // ✅ অর্ডার ইমেইল পাঠানো
   sendAutoEmail(ord);
   document.getElementById('ordNumDisp').textContent=oid;
@@ -1068,7 +1084,7 @@ function updateProdRating(prodId,rerender=true){
   const rvs=approved.length;
   const rat=rvs?Math.round(approved.reduce((s,r)=>s+r.stars,0)/rvs*10)/10:0;
   prod.rat=rat;prod.rvs=rvs;
-  if(rvs>0){_supa.from('prods').update({rat,rvs}).eq('id',prodId);}
+  if(rvs>0){(async()=>{const {error}=await _supa.from('prods').update({rat,rvs}).eq('id',prodId);if(error)console.error('Rating update error:',error);})();}
   if(rerender){renderFeat();renderHomeShop();renderShop();if(curProd&&String(curProd.id)===String(prodId)){renderDet();renderRvs(prodId);}}
 }
 function renderRvs(id){
@@ -1085,7 +1101,11 @@ function submitRv(){
   const newRv={nm,txt,stars:curStar,ok:false,date:new Date().toLocaleDateString('bn-BD')};
   rvStore[curProd.id].push(newRv);
   // ✅ Supabase-এ রিভিউ সেভ
-  _supa.from('reviews').insert({prod_id:String(curProd.id),nm,txt,stars:curStar,ok:false,date:newRv.date});
+  (async()=>{
+    const {error:rvErr}=await _supa.from('reviews').insert({prod_id:String(curProd.id),nm,txt,stars:curStar,ok:false,date:newRv.date});
+    if(rvErr)console.error('Review save error:',rvErr);
+    else console.log('✅ রিভিউ সেভ হয়েছে');
+  })();
   document.getElementById('rvName').value='';document.getElementById('rvTxt').value='';setStar(0);curStar=0;
   showToast('✅ রিভিউ জমা হয়েছে! অ্যাডমিন অনুমোদনের পর দেখাবে।');
 }
@@ -1119,7 +1139,7 @@ async function addProd(){
   showToast('✅ পণ্য যোগ হয়েছে! Supabase-এ সেভ হয়েছে ✅');
 }
 function renderAdmProds(){document.getElementById('admProdList').innerHTML=prods.map(p=>`<div style="background:#f9fafb;border:1.5px solid var(--bd);border-radius:12px;padding:12px;margin-bottom:8px;display:flex;align-items:center;gap:11px"><div style="width:44px;height:44px;border-radius:8px;background:#f3f4f6;display:flex;align-items:center;justify-content:center;font-size:26px;overflow:hidden;flex-shrink:0">${p.imgs?.[0]?`<img src="${p.imgs[0]}" style="width:100%;height:100%;object-fit:cover">`:`${p.emoji}`}</div><div style="flex:1"><div style="font-weight:700;font-size:13px">${p.nm}</div><div style="font-size:11px;color:var(--lgray)">${p.cat} · স্টক: ${p.stk} · ৳${p.pr.toLocaleString()} · ${starHTML(p.rat||0)} (${p.rvs||0})</div></div><button onclick="delProd(${p.id})" style="background:#fef2f2;border:1.5px solid #fca5a5;color:var(--err);padding:5px 11px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700">মুছুন</button></div>`).join('')||'<p style="color:var(--lgray);text-align:center;padding:30px">কোনো পণ্য নেই</p>';}
-function delProd(id){prods=prods.filter(p=>p.id!==id);_supa.from('prods').delete().eq('id',id);renderFeat();renderHomeShop();renderShop();renderAdmProds();renderDash();showToast('🗑️ মুছে ফেলা হয়েছে');}
+function delProd(id){prods=prods.filter(p=>p.id!==id);(async()=>{const {error}=await _supa.from('prods').delete().eq('id',id);if(error)console.error('Delete prod error:',error);})();renderFeat();renderHomeShop();renderShop();renderAdmProds();renderDash();showToast('🗑️ মুছে ফেলা হয়েছে');}
 
 // JSON BULK IMPORT
 function addProdsFromJSON(){
@@ -1161,14 +1181,14 @@ function renderAdmOrds(){
   el.innerHTML=orders.map(o=>`<div class="ord-card"><div class="ord-hdr"><div class="ord-id">${o.id}</div><span class="ord-st st-${o.status==='pending'?'p':o.status==='confirmed'?'c':'d'}">${o.status==='pending'?'⏳ অপেক্ষায়':o.status==='confirmed'?'✅ কনফার্ম':'📦 ডেলিভার্ড'}</span></div><div style="font-size:13px;color:var(--gray)">👤 ${o.nm} · 📞 ${o.ph}</div><div style="font-size:12px;color:var(--lgray);margin-top:2px">📍 ${o.addr}</div><div style="font-size:12px;color:var(--lgray);margin-top:2px">${o.items?.map(i=>`${i.nm}×${i.qty}`).join(', ')}</div><div style="font-weight:800;font-size:15px;background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-top:6px">৳${o.tot?.toLocaleString()} (ডেলিভারি: ৳${o.del||80})</div><div style="margin-top:10px;background:#f9fafb;border:1.5px solid var(--bd);border-radius:9px;padding:10px"><div style="font-size:11px;font-weight:700;color:var(--gray);margin-bottom:6px">🕵️ ফ্রড চেকার</div><button onclick="fraudChk('${o.ph}','frd_${o.id}')" style="background:#fff;border:1.5px solid var(--pk);color:var(--pk);padding:5px 12px;border-radius:8px;cursor:pointer;font-size:11px;font-weight:700">চেক করুন</button><span id="frd_${o.id}" style="margin-left:8px;font-size:12px;font-weight:600"></span></div><div style="display:flex;gap:8px;margin-top:10px"><button onclick="updOrdSt('${o.id}','confirmed')" style="background:#f0fdf4;border:1.5px solid #86efac;color:#166534;padding:5px 12px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700">✅ কনফার্ম</button><button onclick="updOrdSt('${o.id}','delivered')" style="background:#eff6ff;border:1.5px solid #93c5fd;color:#1d4ed8;padding:5px 12px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700">📦 ডেলিভার্ড</button></div></div>`).join('');
 }
 function fraudChk(ph,elId){const el=document.getElementById(elId);if(!el)return;el.textContent='🔍...';setTimeout(()=>{if(['01700000000'].includes(ph)){el.style.color='var(--err)';el.textContent='🚨 ঝুঁকি!';}else{el.style.color='var(--ok)';el.textContent='✅ নিরাপদ';}},1000);}
-function updOrdSt(id,st){const o=orders.find(x=>x.id===id);if(o){o.status=st;_supa.from('orders').update({status:st}).eq('id',id);}renderAdmOrds();showToast('✅ আপডেট হয়েছে');}
+function updOrdSt(id,st){const o=orders.find(x=>x.id===id);if(o){o.status=st;(async()=>{const {error}=await _supa.from('orders').update({status:st}).eq('id',id);if(error)console.error('Order status error:',error);})();}renderAdmOrds();showToast('✅ আপডেট হয়েছে');}
 
 // ===== ADMIN CATEGORIES =====
-function addCat(){const nm=document.getElementById('cNm').value.trim(),emoji=document.getElementById('cEmoji').value.trim()||'📦';if(!nm){showToast('⚠️ নাম দিন');return;}if(cats.find(c=>c.nm===nm)){showToast('⚠️ আগে থেকেই আছে');return;}cats.push({nm,emoji});document.getElementById('cNm').value='';document.getElementById('cEmoji').value='';_supa.from('cats').insert({nm,emoji});refreshCats();showToast('✅ ক্যাটাগরি যোগ হয়েছে!');}
+function addCat(){const nm=document.getElementById('cNm').value.trim(),emoji=document.getElementById('cEmoji').value.trim()||'📦';if(!nm){showToast('⚠️ নাম দিন');return;}if(cats.find(c=>c.nm===nm)){showToast('⚠️ আগে থেকেই আছে');return;}cats.push({nm,emoji});document.getElementById('cNm').value='';document.getElementById('cEmoji').value='';(async()=>{const {error}=await _supa.from('cats').insert({nm,emoji});if(error)console.error('Cat insert error:',error);})();refreshCats();showToast('✅ ক্যাটাগরি যোগ হয়েছে!');}
 function renderAdmCats(){document.getElementById('admCatList').innerHTML=cats.map((c,i)=>`<div style="background:#f9fafb;border:1.5px solid var(--bd);border-radius:10px;padding:10px 14px;display:flex;align-items:center;gap:10px;margin-bottom:8px"><span style="font-size:22px">${c.emoji}</span><span style="flex:1;font-weight:700;font-size:13px">${c.nm}</span><button onclick="openEditCat(${i})" style="background:#eff6ff;border:1.5px solid #93c5fd;color:#1d4ed8;padding:5px 11px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700;margin-right:5px">এডিট</button><button onclick="delCat(${i})" style="background:#fef2f2;border:1.5px solid #fca5a5;color:var(--err);padding:5px 11px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700">মুছুন</button></div>`).join('');}
 function openEditCat(i){document.getElementById('ecNm').value=cats[i].nm;document.getElementById('ecEmoji').value=cats[i].emoji;document.getElementById('ecIdx').value=i;document.getElementById('editCatMod').classList.add('open');}
-function saveEditCat(){const i=parseInt(document.getElementById('ecIdx').value),nm=document.getElementById('ecNm').value.trim(),emoji=document.getElementById('ecEmoji').value.trim()||'📦';if(!nm)return;const old=cats[i];cats[i]={nm,emoji};_supa.from('cats').update({nm,emoji}).eq('nm',old.nm);closeMod('editCatMod');refreshCats();showToast('✅ আপডেট হয়েছে!');}
-function delCat(i){const nm=cats[i].nm;cats.splice(i,1);_supa.from('cats').delete().eq('nm',nm);refreshCats();showToast('🗑️ মুছে ফেলা হয়েছে');}
+function saveEditCat(){const i=parseInt(document.getElementById('ecIdx').value),nm=document.getElementById('ecNm').value.trim(),emoji=document.getElementById('ecEmoji').value.trim()||'📦';if(!nm)return;const old=cats[i];cats[i]={nm,emoji};(async()=>{const {error}=await _supa.from('cats').update({nm,emoji}).eq('nm',old.nm);if(error)console.error('Cat update error:',error);})();closeMod('editCatMod');refreshCats();showToast('✅ আপডেট হয়েছে!');}
+function delCat(i){const nm=cats[i].nm;cats.splice(i,1);(async()=>{const {error}=await _supa.from('cats').delete().eq('nm',nm);if(error)console.error('Cat delete error:',error);})();refreshCats();showToast('🗑️ মুছে ফেলা হয়েছে');}
 function refreshCats(){renderCats();renderCatFilters();updCatSel();renderAdmCats();}
 
 // ===== ADMIN REVIEWS (With Rating Update) =====
@@ -1182,7 +1202,7 @@ function appRv(pid,i){
   if(rvStore[pid]?.[i]){
     rvStore[pid][i].ok=true;
     const dbId=rvStore[pid][i].db_id;
-    if(dbId)_supa.from('reviews').update({ok:true}).eq('id',dbId);
+    if(dbId)(async()=>{const {error}=await _supa.from('reviews').update({ok:true}).eq('id',dbId);if(error)console.error('Review approve error:',error);})();
   }
   updateProdRating(pid,true);
   renderAdmRvs();showToast('✅ অনুমোদন হয়েছে — রেটিং আপডেট হয়েছে!');
@@ -1193,16 +1213,18 @@ function addAITraining(){
   const q=document.getElementById('aiTQ').value.trim(),a=document.getElementById('aiTA').value.trim();
   if(!q||!a){showToast('⚠️ প্রশ্ন ও উত্তর দিন');return;}
   const entry={q,a};
-  _supa.from('ai_training').insert(entry).select().then(({data})=>{
-    if(data&&data[0])aiTraining.push({id:data[0].id,...entry});
+  (async()=>{
+    const {data:aiSaved,error:aiErr}=await _supa.from('ai_training').insert(entry).select();
+    if(aiErr){console.error('AI training save error:',aiErr);showToast('❌ সেভ হয়নি: '+aiErr.message);return;}
+    if(aiSaved&&aiSaved[0])aiTraining.push({id:aiSaved[0].id,...entry});
     renderAITrainList();
-  });
+    showToast('✅ AI ট্রেনিং ডেটা সেভ হয়েছে!');
+  })();
   document.getElementById('aiTQ').value='';document.getElementById('aiTA').value='';
-  showToast('✅ AI ট্রেনিং ডেটা সেভ হয়েছে!');
 }
 function delAITraining(id){
   aiTraining=aiTraining.filter(t=>t.id!==id);
-  _supa.from('ai_training').delete().eq('id',id);
+  (async()=>{const {error}=await _supa.from('ai_training').delete().eq('id',id);if(error)console.error('AI delete error:',error);})();
   renderAITrainList();showToast('🗑️ মুছে ফেলা হয়েছে');
 }
 function renderAITrainList(){
