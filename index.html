@@ -18,25 +18,27 @@
   })();
 </script>
 
-<!-- ✅ Firebase v12 Modular SDK -->
-<script type="module">
-import{initializeApp}from"https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
-import{getDatabase,ref,set,get,onValue,remove,push}from"https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
-import{getStorage,ref as sRef,uploadBytes,getDownloadURL}from"https://www.gstatic.com/firebasejs/12.13.0/firebase-storage.js";
-import{getAuth,signInWithEmailAndPassword,signOut,onAuthStateChanged}from"https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
-const cfg={
-  apiKey:"AIzaSyBw3xrod1hySNlvvtRpQY2sAMevcsrdP1c",
-  authDomain:"hadiaproduct-653c2.firebaseapp.com",
-  projectId:"hadiaproduct-653c2",
-  storageBucket:"hadiaproduct-653c2.firebasestorage.app",
-  messagingSenderId:"207358230753",
-  appId:"1:207358230753:web:99f816612ff6077af0b7a0",
-  databaseURL:"https://hadiaproduct-653c2-default-rtdb.asia-southeast1.firebasedatabase.app"
-};
-const app=initializeApp(cfg);
-const db=getDatabase(app);const storage=getStorage(app);const auth=getAuth(app);
-window._fb={db,storage,auth,ref,set,get,onValue,remove,push,sRef,uploadBytes,getDownloadURL,signInWithEmailAndPassword,signOut,onAuthStateChanged};
-document.dispatchEvent(new Event('fbReady'));
+<!-- ✅ Supabase SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+// ✅ Supabase Config
+const SUPABASE_URL = 'https://ahxfjacozfnwinqkhhwx.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFoeGZqYWNvemZud2lucWtoaHd4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1MDI0NzIsImV4cCI6MjA5NjA3ODQ3Mn0.RsXXIE7NjlJCTBpW6TzbA43_fQwX_GcQ9A0naFNBop4';
+const _supa = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+window._supa = _supa;
+
+// ✅ Supabase Auth State
+_supa.auth.onAuthStateChange((event, session) => {
+  const user = session?.user || null;
+  window._supaUser = user;
+  const lp = document.getElementById('adminLogin'), ap = document.getElementById('adminPanel');
+  if (lp && ap) { lp.style.display = user ? 'none' : 'flex'; ap.style.display = user ? 'block' : 'none'; }
+  const s = document.getElementById('fbStatus'); if (s) s.style.display = user ? 'block' : 'none';
+  if (user) loadFromSupabase();
+});
+
+// ✅ Realtime subscriptions holder
+window._realtimeSubs = [];
 </script>
 
 <style>
@@ -493,7 +495,7 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
         <div class="sec-ttl" style="margin:0"><div class="sec-ttl-inner"><span>অ্যাডমিন প্যানেল</span><div class="mv-line"></div></div></div>
         <button onclick="doLogout()" style="background:#fef2f2;border:1.5px solid #fca5a5;color:var(--err);padding:8px 16px;border-radius:20px;cursor:pointer;font-size:12px;font-weight:700">🚪 লগআউট</button>
       </div>
-      <div style="background:#f0fdf4;border:1.5px solid #86efac;border-radius:10px;padding:10px 14px;font-size:12px;font-weight:600;color:#166534;margin-bottom:16px" id="fbStatus">✅ Firebase সংযুক্ত — সব ডেটা পার্মানেন্ট সেভ হচ্ছে</div>
+      <div style="background:#f0fdf4;border:1.5px solid #86efac;border-radius:10px;padding:10px 14px;font-size:12px;font-weight:600;color:#166534;margin-bottom:16px" id="fbStatus">✅ Supabase সংযুক্ত — সব ডেটা পার্মানেন্ট সেভ হচ্ছে</div>
       <!-- Logo + BG -->
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px">
         <div style="background:var(--card);border:1.5px solid var(--bd);border-radius:14px;padding:16px;box-shadow:var(--sh)">
@@ -527,8 +529,8 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
         <div class="chart-box"><div class="chart-ttl">🏆 শীর্ষ পণ্য</div><div id="topProds"></div></div>
         <!-- Sync button -->
         <div style="background:#fffbeb;border:1.5px solid #fcd34d;border-radius:12px;padding:14px;margin-top:16px">
-          <div style="font-size:13px;font-weight:700;margin-bottom:8px">🔄 PRODUCTS_DATA থেকে Firebase-এ সিঙ্ক</div>
-          <div style="font-size:12px;color:var(--gray);margin-bottom:10px">HTML ফাইলের নিচে PRODUCTS_DATA-তে পণ্য লিখলে এই বাটন দিয়ে Firebase-এ সেভ করুন।</div>
+          <div style="font-size:13px;font-weight:700;margin-bottom:8px">🔄 PRODUCTS_DATA থেকে Supabase-এ সিঙ্ক</div>
+          <div style="font-size:12px;color:var(--gray);margin-bottom:10px">HTML ফাইলের নিচে PRODUCTS_DATA-তে পণ্য লিখলে এই বাটন দিয়ে Supabase-এ সেভ করুন।</div>
           <button class="g-btn g-btn-sm" onclick="syncProductsData()">🔄 এখনই সিঙ্ক করুন</button>
         </div>
       </div>
@@ -596,7 +598,7 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
       <div class="adm-sec" id="tab-ai">
         <div class="pf">
           <h3 style="margin-bottom:10px;font-size:15px;font-weight:800">🤖 AI ট্রেনিং — কাস্টম প্রশ্ন ও উত্তর</h3>
-          <div style="font-size:12px;color:var(--gray);margin-bottom:16px;line-height:1.7">কাস্টমার এই প্রশ্ন বা কাছাকাছি কিছু জিজ্ঞেস করলে AI এই উত্তর দেবে। Firebase-এ পার্মানেন্ট সেভ হবে।</div>
+          <div style="font-size:12px;color:var(--gray);margin-bottom:16px;line-height:1.7">কাস্টমার এই প্রশ্ন বা কাছাকাছি কিছু জিজ্ঞেস করলে AI এই উত্তর দেবে। Supabase-এ পার্মানেন্ট সেভ হবে।</div>
           <div class="fg"><label>প্রশ্ন *</label><input type="text" id="aiTQ" placeholder="যেমন: আপনাদের রিটার্ন পলিসি কী?"></div>
           <div class="fg"><label>উত্তর *</label><textarea id="aiTA" rows="3" placeholder="বিস্তারিত উত্তর লিখুন..."></textarea></div>
           <button class="g-btn g-btn-sm" onclick="addAITraining()">✅ ট্রেনিং ডেটা যোগ করুন</button>
@@ -673,76 +675,122 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 
 <!-- ============================== MAIN SCRIPT ============================== -->
 <script>
-// ===== FIREBASE BRIDGE =====
+// ===== SUPABASE BRIDGE =====
 let fb=null,currentUser=null;
-function onFBReady(){
-  fb=window._fb;
-  fb.onAuthStateChanged(fb.auth,user=>{
-    currentUser=user;
-    const lp=document.getElementById('adminLogin'),ap=document.getElementById('adminPanel');
-    if(lp&&ap){lp.style.display=user?'none':'flex';ap.style.display=user?'block':'none';}
-    loadFromFirebase();const s=document.getElementById('fbStatus');if(s)s.style.display=user?'block':'none';
-  });
-}
-if(window._fb){onFBReady();}
-document.addEventListener('fbReady',onFBReady,{once:true});
+// fb=null রেখেছি — নিচে সব জায়গায় _supa দিয়ে কাজ হবে
 
 // ===== AUTH =====
 async function doLogin(){
-  if(!fb){showToast('⚠️ Firebase লোড হয়নি');return;}
   const pass=document.getElementById('loginPass').value;
   const err=document.getElementById('loginErr');
   const btn=document.getElementById('loginBtn');
   if(!pass){if(err)err.textContent='⚠️ পাসওয়ার্ড দিন';return;}
   btn.disabled=true;btn.textContent='⏳ লগইন হচ্ছে...';
   try{
-    await fb.signInWithEmailAndPassword(fb.auth,'hadiaproduct0@gmail.com',pass);
-    if(err)err.textContent='';
+    const {error}=await _supa.auth.signInWithPassword({email:'hadiaproduct0@gmail.com',password:pass});
+    if(error){if(err)err.textContent='❌ পাসওয়ার্ড ভুল!';btn.disabled=false;btn.textContent='🔐 লগইন করুন';}
+    else{if(err)err.textContent='';}
   }catch(e){
     if(err)err.textContent='❌ পাসওয়ার্ড ভুল!';
     btn.disabled=false;btn.textContent='🔐 লগইন করুন';
   }
 }
 async function doLogout(){
-  if(!fb)return;
-  await fb.signOut(fb.auth);
+  await _supa.auth.signOut();
   showPg('home');setNav(document.querySelectorAll('nav button')[0]);
 }
 
-// ===== FIREBASE LOAD =====
-function loadFromFirebase(){
-  if(!fb)return;
-  fb.onValue(fb.ref(fb.db,'cats'),snap=>{
-    const d=snap.val();
-    if(d){
-      cats=Object.values(d);
-    } else {
-      // ✅ Firebase খালি হলে default categories সেভ করো
-      const obj={};
-      cats.forEach((c,i)=>obj[i]=c);
-      fb.set(fb.ref(fb.db,'cats'),obj);
-    }
-    renderCats();renderCatFilters();updCatSel();renderAdmCats();
-  });
-  fb.onValue(fb.ref(fb.db,'prods'),snap=>{
-    const d=snap.val();
-    if(d){
-      prods=Object.values(d).sort((a,b)=>a.id-b.id);
-    } else {
-      // ✅ Firebase-এ পণ্য নেই → PRODUCTS_DATA থেকে লোড করো
-      if(typeof PRODUCTS_DATA!=='undefined'&&PRODUCTS_DATA.length){
-        prods=[...PRODUCTS_DATA].map((p,i)=>({id:p.id||(Date.now()+i),rat:0,rvs:0,...p}));
-      }
-    }
-    renderFeat();renderHomeShop();renderShop();renderAdmProds();renderDash();
-  });
-  fb.onValue(fb.ref(fb.db,'orders'),snap=>{const d=snap.val();if(d)orders=Object.values(d).sort((a,b)=>b.timestamp-a.timestamp);renderAdmOrds();renderDash();});
-  fb.onValue(fb.ref(fb.db,'reviews'),snap=>{const d=snap.val();if(d){rvStore=d;Object.keys(d).forEach(pid=>updateProdRating(pid,false));}});
-  fb.onValue(fb.ref(fb.db,'aiTraining'),snap=>{const d=snap.val();if(d)aiTraining=Object.entries(d).map(([id,v])=>({id,...v}));else aiTraining=[];renderAITrainList();});
-  if(fb.storage){
-    fb.getDownloadURL(fb.sRef(fb.storage,'logo')).then(url=>{applyLogo(url);logoUrl=url;}).catch(()=>{});
-    fb.getDownloadURL(fb.sRef(fb.storage,'heroBg')).then(url=>{document.getElementById('heroBg').style.backgroundImage=`url(${url})`;}).catch(()=>{});
+// ===== SUPABASE LOAD =====
+async function loadFromSupabase(){
+  // ── CATEGORIES ──
+  const {data:catsData}=await _supa.from('cats').select('*').order('id');
+  if(catsData&&catsData.length){
+    cats=catsData.map(r=>({nm:r.nm,emoji:r.emoji}));
+  } else {
+    // খালি হলে default সেভ করো
+    for(const c of cats){await _supa.from('cats').insert({nm:c.nm,emoji:c.emoji});}
   }
+  renderCats();renderCatFilters();updCatSel();renderAdmCats();
+
+  // ── PRODUCTS ──
+  const {data:prodsData}=await _supa.from('prods').select('*').order('id');
+  if(prodsData&&prodsData.length){
+    prods=prodsData.map(r=>({...r,imgs:r.imgs||[],vars:r.vars||[],keywords:r.keywords||[]})).sort((a,b)=>a.id-b.id);
+  } else if(typeof PRODUCTS_DATA!=='undefined'&&PRODUCTS_DATA.length){
+    prods=[...PRODUCTS_DATA].map((p,i)=>({id:p.id||(Date.now()+i),rat:0,rvs:0,...p}));
+  }
+  renderFeat();renderHomeShop();renderShop();renderAdmProds();renderDash();
+
+  // ── ORDERS ──
+  const {data:ordsData}=await _supa.from('orders').select('*').order('timestamp',{ascending:false});
+  if(ordsData)orders=ordsData.map(r=>({...r,items:r.items||[]}));
+  renderAdmOrds();renderDash();
+
+  // ── REVIEWS ──
+  const {data:rvsData}=await _supa.from('reviews').select('*');
+  if(rvsData){
+    rvStore={};
+    rvsData.forEach(r=>{if(!rvStore[r.prod_id])rvStore[r.prod_id]=[];rvStore[r.prod_id].push({nm:r.nm,txt:r.txt,stars:r.stars,ok:r.ok,date:r.date,db_id:r.id});});
+    Object.keys(rvStore).forEach(pid=>updateProdRating(pid,false));
+  }
+
+  // ── AI TRAINING ──
+  const {data:aiData}=await _supa.from('ai_training').select('*').order('id');
+  if(aiData)aiTraining=aiData.map(r=>({id:r.id,q:r.q,a:r.a}));
+  else aiTraining=[];
+  renderAITrainList();
+
+  // ── LOGO & HERO BG ──
+  const {data:settingsData}=await _supa.from('settings').select('*');
+  if(settingsData){
+    const logo=settingsData.find(s=>s.key==='logo');
+    if(logo){applyLogo(logo.value);logoUrl=logo.value;}
+    const hero=settingsData.find(s=>s.key==='heroBg');
+    if(hero){const bg=document.getElementById('heroBg');if(bg)bg.style.backgroundImage=`url(${hero.value})`;}
+  }
+
+  // ── REALTIME SUBSCRIPTIONS ──
+  _supa.channel('realtime-all')
+    .on('postgres_changes',{event:'*',schema:'public',table:'prods'},async()=>{
+      const {data}=await _supa.from('prods').select('*').order('id');
+      if(data)prods=data.map(r=>({...r,imgs:r.imgs||[],vars:r.vars||[],keywords:r.keywords||[]}));
+      renderFeat();renderHomeShop();renderShop();renderAdmProds();renderDash();
+    })
+    .on('postgres_changes',{event:'*',schema:'public',table:'orders'},async()=>{
+      const {data}=await _supa.from('orders').select('*').order('timestamp',{ascending:false});
+      if(data)orders=data.map(r=>({...r,items:r.items||[]}));
+      renderAdmOrds();renderDash();
+    })
+    .on('postgres_changes',{event:'*',schema:'public',table:'reviews'},async()=>{
+      const {data}=await _supa.from('reviews').select('*');
+      if(data){rvStore={};data.forEach(r=>{if(!rvStore[r.prod_id])rvStore[r.prod_id]=[];rvStore[r.prod_id].push({nm:r.nm,txt:r.txt,stars:r.stars,ok:r.ok,date:r.date,db_id:r.id});});Object.keys(rvStore).forEach(pid=>updateProdRating(pid,false));}
+    })
+    .on('postgres_changes',{event:'*',schema:'public',table:'ai_training'},async()=>{
+      const {data}=await _supa.from('ai_training').select('*').order('id');
+      if(data)aiTraining=data.map(r=>({id:r.id,q:r.q,a:r.a}));
+      renderAITrainList();
+    })
+    .subscribe();
+}
+
+// ✅ Page load-এ public data লোড (login ছাড়াই পণ্য দেখা যাবে)
+async function loadPublicData(){
+  const {data:prodsData}=await _supa.from('prods').select('*').order('id');
+  if(prodsData&&prodsData.length){
+    prods=prodsData.map(r=>({...r,imgs:r.imgs||[],vars:r.vars||[],keywords:r.keywords||[]}));
+    renderFeat();renderHomeShop();renderShop();renderAdmProds();renderDash();
+  } else if(typeof PRODUCTS_DATA!=='undefined'&&PRODUCTS_DATA.length&&!prods.length){
+    prods=[...PRODUCTS_DATA].map((p,i)=>({id:p.id||(Date.now()+i),rat:0,rvs:0,...p}));
+    renderFeat();renderHomeShop();renderShop();
+  }
+  const {data:catsData}=await _supa.from('cats').select('*').order('id');
+  if(catsData&&catsData.length){cats=catsData.map(r=>({nm:r.nm,emoji:r.emoji}));renderCats();renderCatFilters();updCatSel();}
+  const {data:rvsData}=await _supa.from('reviews').select('*');
+  if(rvsData){rvStore={};rvsData.forEach(r=>{if(!rvStore[r.prod_id])rvStore[r.prod_id]=[];rvStore[r.prod_id].push({nm:r.nm,txt:r.txt,stars:r.stars,ok:r.ok,date:r.date,db_id:r.id});});Object.keys(rvStore).forEach(pid=>updateProdRating(pid,false));}
+  const {data:aiData}=await _supa.from('ai_training').select('*').order('id');
+  if(aiData)aiTraining=aiData.map(r=>({id:r.id,q:r.q,a:r.a}));
+  const {data:settingsData}=await _supa.from('settings').select('*');
+  if(settingsData){const logo=settingsData.find(s=>s.key==='logo');if(logo){applyLogo(logo.value);logoUrl=logo.value;}const hero=settingsData.find(s=>s.key==='heroBg');if(hero){const bg=document.getElementById('heroBg');if(bg)bg.style.backgroundImage=`url(${hero.value})`;}}
 }
 
 // ===== STATE =====
@@ -864,8 +912,8 @@ function goBack(){
 
 // ===== LOGO =====
 function applyLogo(url){const li=document.querySelector('.logo img');if(li){li.src=url;li.style.display='block';}}
-async function uploadLogo(inp){const f=inp.files[0];if(!f)return;showToast('⏳ লোগো আপলোড...');const r=new FileReader();r.onload=async e=>{const url=e.target.result;applyLogo(url);logoUrl=url;if(fb&&fb.storage){try{const blob=await(await fetch(url)).blob();await fb.uploadBytes(fb.sRef(fb.storage,'logo'),blob);logoUrl=await fb.getDownloadURL(fb.sRef(fb.storage,'logo'));showToast('✅ লোগো পার্মানেন্ট সেভ!');}catch(e){showToast('✅ লোগো যোগ হয়েছে');}}};r.readAsDataURL(f);}
-async function setHeroBg(inp){const f=inp.files[0];if(!f)return;const r=new FileReader();r.onload=async e=>{document.getElementById('heroBg').style.backgroundImage=`url(${e.target.result})`;if(fb&&fb.storage){try{const blob=await(await fetch(e.target.result)).blob();await fb.uploadBytes(fb.sRef(fb.storage,'heroBg'),blob);showToast('✅ ব্যাকগ্রাউন্ড সেভ!');}catch(err){showToast('✅ পরিবর্তন হয়েছে');}}};r.readAsDataURL(f);}
+async function uploadLogo(inp){const f=inp.files[0];if(!f)return;showToast('⏳ লোগো আপলোড...');const r=new FileReader();r.onload=async e=>{const url=e.target.result;applyLogo(url);logoUrl=url;try{const base64=url.split(',')[1];const byteArr=Uint8Array.from(atob(base64),c=>c.charCodeAt(0));const{data,error}=await _supa.storage.from('assets').upload('logo',new Blob([byteArr],{type:f.type}),{upsert:true});if(!error){const{data:pub}=_supa.storage.from('assets').getPublicUrl('logo');logoUrl=pub.publicUrl;applyLogo(logoUrl);await _supa.from('settings').upsert({key:'logo',value:logoUrl},{onConflict:'key'});showToast('✅ লোগো পার্মানেন্ট সেভ!');}else{await _supa.from('settings').upsert({key:'logo',value:url},{onConflict:'key'});showToast('✅ লোগো যোগ হয়েছে');}}catch(err){showToast('✅ লোগো যোগ হয়েছে');}};r.readAsDataURL(f);}
+async function setHeroBg(inp){const f=inp.files[0];if(!f)return;const r=new FileReader();r.onload=async e=>{const url=e.target.result;document.getElementById('heroBg').style.backgroundImage=`url(${url})`;try{const base64=url.split(',')[1];const byteArr=Uint8Array.from(atob(base64),c=>c.charCodeAt(0));const{data,error}=await _supa.storage.from('assets').upload('heroBg',new Blob([byteArr],{type:f.type}),{upsert:true});if(!error){const{data:pub}=_supa.storage.from('assets').getPublicUrl('heroBg');await _supa.from('settings').upsert({key:'heroBg',value:pub.publicUrl},{onConflict:'key'});showToast('✅ ব্যাকগ্রাউন্ড সেভ!');}else{await _supa.from('settings').upsert({key:'heroBg',value:url},{onConflict:'key'});showToast('✅ পরিবর্তন হয়েছে');}}catch(err){showToast('✅ পরিবর্তন হয়েছে');}};r.readAsDataURL(f);}
 
 // ===== CATEGORIES =====
 function renderCats(){document.getElementById('catGrid').innerHTML=cats.map(c=>`<div class="cat-card" onclick="goToCat('${c.nm}')"><div class="cat-icon">${c.emoji}</div><div class="cat-nm">${c.nm}</div></div>`).join('');}
@@ -957,7 +1005,8 @@ function placeOrder(){
   const now=new Date();
   const ord={id:oid,nm,addr:`${vil}, ${tha}, ${dis}`,ph,items:[...cart],sub,del,tot,pay:document.getElementById('payM').value,note:document.getElementById('coNote').value.trim(),date:now.toLocaleDateString('bn-BD'),time:now.toLocaleTimeString('bn-BD'),status:'pending',timestamp:Date.now()};
   orders.unshift(ord);lastOrd=ord;
-  if(fb){fb.set(fb.ref(fb.db,'orders/'+oid),ord);}
+  // ✅ Supabase-এ অর্ডার সেভ
+  _supa.from('orders').insert({id:oid,nm:ord.nm,addr:ord.addr,ph:ord.ph,items:ord.items,sub:ord.sub,del:ord.del,tot:ord.tot,pay:ord.pay,note:ord.note,date:ord.date,time:ord.time,status:'pending',timestamp:ord.timestamp});
   // ✅ অর্ডার ইমেইল পাঠানো
   sendAutoEmail(ord);
   document.getElementById('ordNumDisp').textContent=oid;
@@ -968,7 +1017,7 @@ function placeOrder(){
 async function dlPDF(){
   if(!lastOrd)return;
   const o=lastOrd;
-  // ✅ লোগো: Firebase URL → মূল পেজের <img> src → fallback "H" monogram
+  // ✅ লোগো: Supabase URL → মূল পেজের <img> src → fallback "H" monogram
   const vLogo=document.getElementById('vLogoWrap');
   if(vLogo){
     const mainLogoImg=document.querySelector('.logo img');
@@ -1012,7 +1061,7 @@ function updateProdRating(prodId,rerender=true){
   const rvs=approved.length;
   const rat=rvs?Math.round(approved.reduce((s,r)=>s+r.stars,0)/rvs*10)/10:0;
   prod.rat=rat;prod.rvs=rvs;
-  if(fb&&rvs>0){fb.set(fb.ref(fb.db,'prods/'+prodId+'/rat'),rat);fb.set(fb.ref(fb.db,'prods/'+prodId+'/rvs'),rvs);}
+  if(rvs>0){_supa.from('prods').update({rat,rvs}).eq('id',prodId);}
   if(rerender){renderFeat();renderHomeShop();renderShop();if(curProd&&String(curProd.id)===String(prodId)){renderDet();renderRvs(prodId);}}
 }
 function renderRvs(id){
@@ -1026,8 +1075,10 @@ function submitRv(){
   const nm=document.getElementById('rvName').value.trim(),txt=document.getElementById('rvTxt').value.trim();
   if(!nm||!txt||!curStar){showToast('⚠️ নাম, রিভিউ ও রেটিং দিন');return;}
   if(!rvStore[curProd.id])rvStore[curProd.id]=[];
-  rvStore[curProd.id].push({nm,txt,stars:curStar,ok:false,date:new Date().toLocaleDateString('bn-BD')});
-  if(fb){fb.set(fb.ref(fb.db,'reviews/'+curProd.id),rvStore[curProd.id]);}
+  const newRv={nm,txt,stars:curStar,ok:false,date:new Date().toLocaleDateString('bn-BD')};
+  rvStore[curProd.id].push(newRv);
+  // ✅ Supabase-এ রিভিউ সেভ
+  _supa.from('reviews').insert({prod_id:String(curProd.id),nm,txt,stars:curStar,ok:false,date:newRv.date});
   document.getElementById('rvName').value='';document.getElementById('rvTxt').value='';setStar(0);curStar=0;
   showToast('✅ রিভিউ জমা হয়েছে! অ্যাডমিন অনুমোদনের পর দেখাবে।');
 }
@@ -1048,18 +1099,18 @@ async function addProd(){
   if(!nm||!pr){showToast('⚠️ নাম ও দাম দিন');return;}
   const btn=document.getElementById('addProdBtn');btn.textContent='⏳ সেভ হচ্ছে...';btn.disabled=true;
   const id=Date.now();let imgUrls=[];const imgs=pendImgs.filter(Boolean);
-  if(imgs.length>0&&fb&&fb.storage){showToast('📸 ছবি আপলোড...');try{for(let i=0;i<imgs.length;i++){const blob=await(await fetch(imgs[i])).blob();const ref=fb.sRef(fb.storage,`prods/${id}/img_${i}`);await fb.uploadBytes(ref,blob);imgUrls.push(await fb.getDownloadURL(ref));}}catch(e){imgUrls=imgs;}}else{imgUrls=imgs;}
+  if(imgs.length>0){showToast('📸 ছবি আপলোড...');try{for(let i=0;i<imgs.length;i++){const base64=imgs[i].split(',')[1];const byteArr=Uint8Array.from(atob(base64),c=>c.charCodeAt(0));const path=`prods/${id}/img_${i}`;const{error}=await _supa.storage.from('assets').upload(path,new Blob([byteArr],{type:'image/jpeg'}),{upsert:true});if(!error){const{data:pub}=_supa.storage.from('assets').getPublicUrl(path);imgUrls.push(pub.publicUrl);}else{imgUrls.push(imgs[i]);}}}catch(e){imgUrls=imgs;}}else{imgUrls=imgs;}
   const kw=document.getElementById('pKw').value.split(',').map(k=>k.trim()).filter(Boolean);
   const prod={id,nm,pr,op:parseInt(document.getElementById('pOp').value)||0,cat:document.getElementById('pCat').value,desc:document.getElementById('pDesc').value.trim(),emoji:document.getElementById('pEmoji').value||'📦',stk:parseInt(document.getElementById('pStk').value)||100,feat:document.getElementById('pFeat').checked,rat:0,rvs:0,imgs:imgUrls,vars:[...pendVars],keywords:kw};
-  if(fb){await fb.set(fb.ref(fb.db,'prods/'+id),prod);}
+  if(true){await _supa.from('prods').upsert({id,nm:prod.nm,pr:prod.pr,op:prod.op,cat:prod.cat,desc:prod.desc,emoji:prod.emoji,stk:prod.stk,feat:prod.feat,rat:0,rvs:0,imgs:prod.imgs,vars:prod.vars,keywords:prod.keywords});}
   prods.push(prod);renderFeat();renderHomeShop();renderShop();renderAdmProds();renderDash();
   ['pNm','pPr','pOp','pDesc','pEmoji','pStk','pKw'].forEach(id2=>document.getElementById(id2).value='');
   document.getElementById('pFeat').checked=false;document.getElementById('imgPvGrid').innerHTML='';document.getElementById('varList').innerHTML='';
   pendImgs=[];pendVars=[];btn.textContent='✅ পণ্য যোগ করুন';btn.disabled=false;
-  showToast('✅ পণ্য যোগ হয়েছে! '+(fb?'Firebase-এ সেভ হয়েছে ✅':''));
+  showToast('✅ পণ্য যোগ হয়েছে! Supabase-এ সেভ হয়েছে ✅');
 }
 function renderAdmProds(){document.getElementById('admProdList').innerHTML=prods.map(p=>`<div style="background:#f9fafb;border:1.5px solid var(--bd);border-radius:12px;padding:12px;margin-bottom:8px;display:flex;align-items:center;gap:11px"><div style="width:44px;height:44px;border-radius:8px;background:#f3f4f6;display:flex;align-items:center;justify-content:center;font-size:26px;overflow:hidden;flex-shrink:0">${p.imgs?.[0]?`<img src="${p.imgs[0]}" style="width:100%;height:100%;object-fit:cover">`:`${p.emoji}`}</div><div style="flex:1"><div style="font-weight:700;font-size:13px">${p.nm}</div><div style="font-size:11px;color:var(--lgray)">${p.cat} · স্টক: ${p.stk} · ৳${p.pr.toLocaleString()} · ${starHTML(p.rat||0)} (${p.rvs||0})</div></div><button onclick="delProd(${p.id})" style="background:#fef2f2;border:1.5px solid #fca5a5;color:var(--err);padding:5px 11px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700">মুছুন</button></div>`).join('')||'<p style="color:var(--lgray);text-align:center;padding:30px">কোনো পণ্য নেই</p>';}
-function delProd(id){prods=prods.filter(p=>p.id!==id);if(fb){fb.remove(fb.ref(fb.db,'prods/'+id));}renderFeat();renderHomeShop();renderShop();renderAdmProds();renderDash();showToast('🗑️ মুছে ফেলা হয়েছে');}
+function delProd(id){prods=prods.filter(p=>p.id!==id);_supa.from('prods').delete().eq('id',id);renderFeat();renderHomeShop();renderShop();renderAdmProds();renderDash();showToast('🗑️ মুছে ফেলা হয়েছে');}
 
 // JSON BULK IMPORT
 function addProdsFromJSON(){
@@ -1071,7 +1122,7 @@ function addProdsFromJSON(){
   arr.forEach(async p=>{
     const id=p.id||Date.now()+Math.floor(Math.random()*1000);
     const prod={id,nm:p.nm||'?',pr:p.pr||0,op:p.op||0,cat:p.cat||'অন্যান্য',desc:p.desc||'',emoji:p.emoji||'📦',stk:p.stk||100,feat:p.feat||false,rat:0,rvs:0,imgs:p.imgs||[],vars:p.vars||[],keywords:p.keywords||[]};
-    if(fb){await fb.set(fb.ref(fb.db,'prods/'+id),prod);}
+    await _supa.from('prods').upsert(prod);
     prods.push(prod);
   });
   renderFeat();renderHomeShop();renderShop();renderAdmProds();renderDash();
@@ -1084,15 +1135,14 @@ function insertJSONTemplate(){
 // SYNC PRODUCTS_DATA
 async function syncProductsData(){
   if(typeof PRODUCTS_DATA==='undefined'||!PRODUCTS_DATA.length){showToast('⚠️ PRODUCTS_DATA খালি বা নেই');return;}
-  if(!fb){showToast('⚠️ Firebase সংযুক্ত নেই');return;}
   showToast('⏳ সিঙ্ক হচ্ছে...');
   for(let i=0;i<PRODUCTS_DATA.length;i++){
     const p=PRODUCTS_DATA[i];
     const id=p.id||(Date.now()+i);
     const prod={id,nm:p.nm||'?',pr:p.pr||0,op:p.op||0,cat:p.cat||'অন্যান্য',desc:p.desc||'',emoji:p.emoji||'📦',stk:p.stk||100,feat:p.feat||false,rat:0,rvs:0,imgs:p.imgs||[],vars:p.vars||[],keywords:p.keywords||[]};
-    await fb.set(fb.ref(fb.db,'prods/'+id),prod);
+    await _supa.from('prods').upsert(prod);
   }
-  showToast(`✅ ${PRODUCTS_DATA.length}টি পণ্য Firebase-এ সেভ হয়েছে!`);
+  showToast(`✅ ${PRODUCTS_DATA.length}টি পণ্য Supabase-এ সেভ হয়েছে!`);
 }
 
 // ===== ADMIN ORDERS =====
@@ -1102,14 +1152,14 @@ function renderAdmOrds(){
   el.innerHTML=orders.map(o=>`<div class="ord-card"><div class="ord-hdr"><div class="ord-id">${o.id}</div><span class="ord-st st-${o.status==='pending'?'p':o.status==='confirmed'?'c':'d'}">${o.status==='pending'?'⏳ অপেক্ষায়':o.status==='confirmed'?'✅ কনফার্ম':'📦 ডেলিভার্ড'}</span></div><div style="font-size:13px;color:var(--gray)">👤 ${o.nm} · 📞 ${o.ph}</div><div style="font-size:12px;color:var(--lgray);margin-top:2px">📍 ${o.addr}</div><div style="font-size:12px;color:var(--lgray);margin-top:2px">${o.items?.map(i=>`${i.nm}×${i.qty}`).join(', ')}</div><div style="font-weight:800;font-size:15px;background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-top:6px">৳${o.tot?.toLocaleString()} (ডেলিভারি: ৳${o.del||80})</div><div style="margin-top:10px;background:#f9fafb;border:1.5px solid var(--bd);border-radius:9px;padding:10px"><div style="font-size:11px;font-weight:700;color:var(--gray);margin-bottom:6px">🕵️ ফ্রড চেকার</div><button onclick="fraudChk('${o.ph}','frd_${o.id}')" style="background:#fff;border:1.5px solid var(--pk);color:var(--pk);padding:5px 12px;border-radius:8px;cursor:pointer;font-size:11px;font-weight:700">চেক করুন</button><span id="frd_${o.id}" style="margin-left:8px;font-size:12px;font-weight:600"></span></div><div style="display:flex;gap:8px;margin-top:10px"><button onclick="updOrdSt('${o.id}','confirmed')" style="background:#f0fdf4;border:1.5px solid #86efac;color:#166534;padding:5px 12px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700">✅ কনফার্ম</button><button onclick="updOrdSt('${o.id}','delivered')" style="background:#eff6ff;border:1.5px solid #93c5fd;color:#1d4ed8;padding:5px 12px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700">📦 ডেলিভার্ড</button></div></div>`).join('');
 }
 function fraudChk(ph,elId){const el=document.getElementById(elId);if(!el)return;el.textContent='🔍...';setTimeout(()=>{if(['01700000000'].includes(ph)){el.style.color='var(--err)';el.textContent='🚨 ঝুঁকি!';}else{el.style.color='var(--ok)';el.textContent='✅ নিরাপদ';}},1000);}
-function updOrdSt(id,st){const o=orders.find(x=>x.id===id);if(o){o.status=st;if(fb)fb.set(fb.ref(fb.db,'orders/'+id+'/status'),st);}renderAdmOrds();showToast('✅ আপডেট হয়েছে');}
+function updOrdSt(id,st){const o=orders.find(x=>x.id===id);if(o){o.status=st;_supa.from('orders').update({status:st}).eq('id',id);}renderAdmOrds();showToast('✅ আপডেট হয়েছে');}
 
 // ===== ADMIN CATEGORIES =====
-function addCat(){const nm=document.getElementById('cNm').value.trim(),emoji=document.getElementById('cEmoji').value.trim()||'📦';if(!nm){showToast('⚠️ নাম দিন');return;}if(cats.find(c=>c.nm===nm)){showToast('⚠️ আগে থেকেই আছে');return;}cats.push({nm,emoji});document.getElementById('cNm').value='';document.getElementById('cEmoji').value='';if(fb){const obj={};cats.forEach((c,i)=>obj[i]=c);fb.set(fb.ref(fb.db,'cats'),obj);}refreshCats();showToast('✅ ক্যাটাগরি যোগ হয়েছে!');}
+function addCat(){const nm=document.getElementById('cNm').value.trim(),emoji=document.getElementById('cEmoji').value.trim()||'📦';if(!nm){showToast('⚠️ নাম দিন');return;}if(cats.find(c=>c.nm===nm)){showToast('⚠️ আগে থেকেই আছে');return;}cats.push({nm,emoji});document.getElementById('cNm').value='';document.getElementById('cEmoji').value='';_supa.from('cats').insert({nm,emoji});refreshCats();showToast('✅ ক্যাটাগরি যোগ হয়েছে!');}
 function renderAdmCats(){document.getElementById('admCatList').innerHTML=cats.map((c,i)=>`<div style="background:#f9fafb;border:1.5px solid var(--bd);border-radius:10px;padding:10px 14px;display:flex;align-items:center;gap:10px;margin-bottom:8px"><span style="font-size:22px">${c.emoji}</span><span style="flex:1;font-weight:700;font-size:13px">${c.nm}</span><button onclick="openEditCat(${i})" style="background:#eff6ff;border:1.5px solid #93c5fd;color:#1d4ed8;padding:5px 11px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700;margin-right:5px">এডিট</button><button onclick="delCat(${i})" style="background:#fef2f2;border:1.5px solid #fca5a5;color:var(--err);padding:5px 11px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700">মুছুন</button></div>`).join('');}
 function openEditCat(i){document.getElementById('ecNm').value=cats[i].nm;document.getElementById('ecEmoji').value=cats[i].emoji;document.getElementById('ecIdx').value=i;document.getElementById('editCatMod').classList.add('open');}
-function saveEditCat(){const i=parseInt(document.getElementById('ecIdx').value),nm=document.getElementById('ecNm').value.trim(),emoji=document.getElementById('ecEmoji').value.trim()||'📦';if(!nm)return;cats[i]={nm,emoji};if(fb){const obj={};cats.forEach((c,j)=>obj[j]=c);fb.set(fb.ref(fb.db,'cats'),obj);}closeMod('editCatMod');refreshCats();showToast('✅ আপডেট হয়েছে!');}
-function delCat(i){cats.splice(i,1);if(fb){const obj={};cats.forEach((c,j)=>obj[j]=c);fb.set(fb.ref(fb.db,'cats'),obj);}refreshCats();showToast('🗑️ মুছে ফেলা হয়েছে');}
+function saveEditCat(){const i=parseInt(document.getElementById('ecIdx').value),nm=document.getElementById('ecNm').value.trim(),emoji=document.getElementById('ecEmoji').value.trim()||'📦';if(!nm)return;const old=cats[i];cats[i]={nm,emoji};_supa.from('cats').update({nm,emoji}).eq('nm',old.nm);closeMod('editCatMod');refreshCats();showToast('✅ আপডেট হয়েছে!');}
+function delCat(i){const nm=cats[i].nm;cats.splice(i,1);_supa.from('cats').delete().eq('nm',nm);refreshCats();showToast('🗑️ মুছে ফেলা হয়েছে');}
 function refreshCats(){renderCats();renderCatFilters();updCatSel();renderAdmCats();}
 
 // ===== ADMIN REVIEWS (With Rating Update) =====
@@ -1120,8 +1170,11 @@ function renderAdmRvs(){
   el.innerHTML=all.map(r=>`<div class="rv-card"><div class="rv-hdr"><div class="rv-nm">${r.nm} ${'★'.repeat(r.stars)}</div><span style="font-size:11px;font-weight:700;color:${r.ok?'var(--ok)':'var(--warn)'}">${r.ok?'✅ অনুমোদিত':'⏳ অপেক্ষায়'}</span></div><div class="rv-txt">${r.txt}</div>${!r.ok?`<button onclick="appRv('${r.pid}',${r.li})" style="background:#f0fdf4;border:1.5px solid #86efac;color:#166634;padding:5px 13px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700;margin-top:8px">✅ অনুমোদন</button>`:''}</div>`).join('');
 }
 function appRv(pid,i){
-  if(rvStore[pid]?.[i])rvStore[pid][i].ok=true;
-  if(fb){fb.set(fb.ref(fb.db,'reviews/'+pid),rvStore[pid]);}
+  if(rvStore[pid]?.[i]){
+    rvStore[pid][i].ok=true;
+    const dbId=rvStore[pid][i].db_id;
+    if(dbId)_supa.from('reviews').update({ok:true}).eq('id',dbId);
+  }
   updateProdRating(pid,true);
   renderAdmRvs();showToast('✅ অনুমোদন হয়েছে — রেটিং আপডেট হয়েছে!');
 }
@@ -1131,14 +1184,16 @@ function addAITraining(){
   const q=document.getElementById('aiTQ').value.trim(),a=document.getElementById('aiTA').value.trim();
   if(!q||!a){showToast('⚠️ প্রশ্ন ও উত্তর দিন');return;}
   const entry={q,a};
-  if(fb){fb.set(fb.ref(fb.db,'aiTraining/'+Date.now()),entry);}
-  else{aiTraining.push({id:Date.now(),...entry});renderAITrainList();}
+  _supa.from('ai_training').insert(entry).select().then(({data})=>{
+    if(data&&data[0])aiTraining.push({id:data[0].id,...entry});
+    renderAITrainList();
+  });
   document.getElementById('aiTQ').value='';document.getElementById('aiTA').value='';
   showToast('✅ AI ট্রেনিং ডেটা সেভ হয়েছে!');
 }
 function delAITraining(id){
   aiTraining=aiTraining.filter(t=>t.id!==id);
-  if(fb){fb.remove(fb.ref(fb.db,'aiTraining/'+id));}
+  _supa.from('ai_training').delete().eq('id',id);
   renderAITrainList();showToast('🗑️ মুছে ফেলা হয়েছে');
 }
 function renderAITrainList(){
@@ -1195,20 +1250,9 @@ function showToast(msg){const t=document.getElementById('toast');t.textContent=m
 // ===== INIT =====
 function init(){
   renderCats();renderFeat();renderHomeShop();renderShop();renderCatFilters();updCart();
-  // ✅ PRODUCTS_DATA টাইমিং ফিক্স: Firebase না থাকলে এখনই লোড করো
-  // Firebase থাকলে loadFromFirebase() ভেতরে Firebase-খালি-হলে লোড হবে
-  if(!fb && typeof PRODUCTS_DATA!=='undefined' && PRODUCTS_DATA.length && !prods.length){
-    prods=[...PRODUCTS_DATA].map((p,i)=>({id:p.id||(Date.now()+i),rat:0,rvs:0,...p}));
-    renderFeat();renderHomeShop();renderShop();
-  }
+  // ✅ Supabase থেকে public data লোড করো (login ছাড়াই)
+  loadPublicData();
 }
-
-// ✅ fbReady-র আগে init চলে গেলেও PRODUCTS_DATA সঠিকভাবে লোড হয়
-// Firebase কানেক্ট হলে loadFromFirebase()-এ আবার রি-রেন্ডার হবে
-document.addEventListener('fbReady', ()=>{
-  // Firebase এসে গেলে PRODUCTS_DATA fallback দরকার নেই,
-  // loadFromFirebase > prods listener সামলাবে
-}, {once:true});
 
 init();
 </script>
@@ -1217,8 +1261,8 @@ init();
      📦 পণ্যের ডেটা সেকশন — এখানে পণ্য যোগ করুন
      ================================================================
      ✅ এই ফাইলের একদম নিচে আপনার পণ্যগুলো যোগ করুন।
-     ✅ Firebase চালু থাকলে অ্যাডমিন → ড্যাশবোর্ড → "সিঙ্ক" বাটন চাপুন।
-     ✅ Firebase ছাড়াও সাইট কাজ করবে এই ডেটা দিয়ে।
+     ✅ Supabase চালু থাকলে অ্যাডমিন → ড্যাশবোর্ড → "সিঙ্ক" বাটন চাপুন।
+     ✅ Supabase ছাড়াও সাইট কাজ করবে এই ডেটা দিয়ে।
      ================================================================ -->
 <script>
 const PRODUCTS_DATA = [
