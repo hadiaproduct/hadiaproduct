@@ -7,7 +7,6 @@
 <title>হাদিয়া প্রোডাক্ট | Hadia Product</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<!-- ✅ EmailJS SDK -->
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script>
   // ✅ EmailJS Init — আপনার Public Key দিন
@@ -18,7 +17,6 @@
   })();
 </script>
 
-<!-- ✅ Supabase SDK -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
 // ✅ Supabase Config
@@ -40,22 +38,29 @@ let _authLoaded = false;
 _supa.auth.onAuthStateChange((event, session) => {
   const user = session?.user || null;
   window._supaUser = user;
-  const lp = document.getElementById('adminLogin'), ap = document.getElementById('adminPanel');
-  if (lp && ap) { lp.style.display = user ? 'none' : 'flex'; ap.style.display = user ? 'block' : 'none'; }
-  const s = document.getElementById('fbStatus'); if (s) s.style.display = user ? 'block' : 'none';
+
+  // পেজের HTML লোড হওয়া পর্যন্ত অপেক্ষা করে তারপর UI আপডেট করবে
+  const updateAdminUI = () => {
+    const lp = document.getElementById('adminLogin'), ap = document.getElementById('adminPanel');
+    if (lp && ap) { lp.style.display = user ? 'none' : 'flex'; ap.style.display = user ? 'block' : 'none'; }
+    const s = document.getElementById('fbStatus'); if (s) s.style.display = user ? 'block' : 'none';
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', updateAdminUI);
+  } else {
+    updateAdminUI();
+  }
 
   if (user) {
-    // SIGNED_IN = নতুন লগইন, INITIAL_SESSION = রিফ্রেশের পর session restore
-    // TOKEN_REFRESHED = token নবায়ন (শুধু render, data reload না)
     if ((event === 'SIGNED_IN' || event === 'INITIAL_SESSION') && !_authLoaded) {
       _authLoaded = true;
       loadFromSupabase();
     } else if (event === 'TOKEN_REFRESHED' && _authLoaded) {
-      renderAdmOrds && renderAdmOrds();
-      renderDash && renderDash();
+      if(typeof renderAdmOrds === 'function') renderAdmOrds();
+      if(typeof renderDash === 'function') renderDash();
     }
   } else {
-    // SIGNED_OUT বা session নেই
     _authLoaded = false;
   }
 });
@@ -301,13 +306,9 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 </head>
 <body>
 
-<!-- VOUCHER TEMPLATE -->
 <div id="vTpl" style="position:fixed;left:-9999px;top:0;width:560px;background:#fff;font-family:'Segoe UI',Tahoma,Arial,sans-serif;display:none">
-  <!-- ✅ HEADER — Black & Cyan Gradient -->
   <div style="background:#000000;padding:22px 26px;display:flex;align-items:center;gap:16px;position:relative;overflow:hidden">
-    <!-- subtle shine line -->
     <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,#e91e8c,transparent);opacity:.7"></div>
-    <!-- ✅ লোগো — মূল পেজের লোগো সিঙ্ক হবে JS থেকে -->
     <div id="vLogoWrap" style="width:62px;height:62px;background:rgba(255,255,255,.08);border:2px solid rgba(0,229,255,.35);border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden"></div>
     <div style="flex:1">
       <div style="color:#fff;font-size:18px;font-weight:900;letter-spacing:1.5px;text-shadow:0 0 18px rgba(0,229,255,.4)">HADIA PRODUCT</div>
@@ -315,11 +316,9 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
       <div style="color:rgba(255,255,255,.5);font-size:9px;margin-top:3px">hadiaproduct0@gmail.com | facebook.com/hadiaproduct0</div>
     </div>
     <div style="background:rgba(0,229,255,.12);border:1.5px solid rgba(0,229,255,.45);border-radius:18px;padding:7px 14px;color:#e91e8c;font-size:10px;font-weight:700;white-space:nowrap;text-shadow:0 0 8px rgba(0,229,255,.5)">অর্ডার ভাউচার</div>
-    <!-- bottom glow line -->
     <div style="position:absolute;bottom:0;left:0;right:0;height:1.5px;background:linear-gradient(90deg,transparent,rgba(0,229,255,.6),transparent)"></div>
   </div>
 
-  <!-- INFO GRID -->
   <div style="background:#f8f9fc;border-left:4px solid #e91e8c;margin:16px;border-radius:10px;padding:14px 16px">
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
       <div><div style="font-size:9px;color:#9ca3af;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">অর্ডার নম্বর</div><div id="v-id" style="font-size:14px;font-weight:800;color:#e91e8c"></div></div>
@@ -331,7 +330,6 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
     </div>
   </div>
 
-  <!-- ITEMS TABLE -->
   <div style="margin:0 16px">
     <div style="background:linear-gradient(135deg,#383636,#000000);border-radius:8px 8px 0 0;padding:10px 14px;display:grid;grid-template-columns:1fr 60px 90px;gap:8px">
       <div style="color:#e91e8c;font-size:11px;font-weight:700">পণ্যের নাম</div>
@@ -341,14 +339,12 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
     <div id="v-items" style="border:1.5px solid #e5e7eb;border-top:none;border-radius:0 0 8px 8px;overflow:hidden"></div>
   </div>
 
-  <!-- TOTALS -->
   <div style="margin:14px 16px;background:#f8f9fc;border-radius:10px;padding:14px 16px">
     <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #e5e7eb;font-size:12px;color:#6b7280"><span>পণ্যের মোট</span><span id="v-sub" style="font-weight:600"></span></div>
     <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #e5e7eb;font-size:12px;color:#6b7280"><span>ডেলিভারি চার্জ</span><span id="v-del" style="font-weight:600"></span></div>
     <div style="display:flex;justify-content:space-between;padding:10px 0 4px;font-size:16px;font-weight:800;color:#1a1a2e"><span>সর্বমোট</span><span id="v-tot" style="color:#e91e8c"></span></div>
   </div>
 
-  <!-- ✅ FOOTER — Black & Cyan Gradient -->
   <div style="background:#000000;padding:18px 24px;text-align:center;margin-top:10px;position:relative;overflow:hidden">
     <div style="position:absolute;top:0;left:0;right:0;height:1.5px;background:linear-gradient(90deg,transparent,rgba(0,229,255,.6),transparent)"></div>
     <div style="color:#e91e8c;font-size:12px;font-weight:800;margin-bottom:5px;letter-spacing:.5px;text-shadow:0 0 10px rgba(0,229,255,.5)">ধন্যবাদ কেনাকাটার জন্য! 🙏</div>
@@ -380,7 +376,6 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
   </div>
 </header>
 
-<!-- HOME -->
 <div class="page active" id="page-home">
   <div class="hero">
     <div class="hero-bg" id="heroBg"></div><div class="hero-ov"></div>
@@ -411,7 +406,6 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
   </div>
 </div>
 
-<!-- SHOP -->
 <div class="page" id="page-shop">
   <div class="sec">
     <div class="sec-ttl"><div class="sec-ttl-inner"><span>সকল পণ্য</span><div class="mv-line"></div></div></div>
@@ -422,7 +416,6 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
   </div>
 </div>
 
-<!-- DETAIL -->
 <div class="page" id="page-detail">
   <div class="sec">
     <button onclick="goBack()" style="background:var(--card);border:1.5px solid var(--bd);color:var(--gray);padding:8px 18px;border-radius:20px;cursor:pointer;font-size:13px;font-weight:600;margin-bottom:20px">← ফিরে যান</button>
@@ -441,7 +434,6 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
   </div>
 </div>
 
-<!-- CART -->
 <div class="page" id="page-cart">
   <div class="sec" style="max-width:660px">
     <div class="sec-ttl"><div class="sec-ttl-inner"><span>আমার কার্ট</span><div class="mv-line"></div></div></div>
@@ -455,7 +447,6 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
   </div>
 </div>
 
-<!-- CHECKOUT -->
 <div class="page" id="page-checkout">
   <div class="co-wrap">
     <div class="sec-ttl"><div class="sec-ttl-inner"><span>অর্ডার তথ্য</span><div class="mv-line"></div></div></div>
@@ -481,7 +472,6 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
   </div>
 </div>
 
-<!-- CONTACT -->
 <div class="page" id="page-contact">
   <div class="con-wrap">
     <div class="sec-ttl" style="text-align:center"><div class="sec-ttl-inner"><span>যোগাযোগ করুন</span><div class="mv-line"></div></div></div>
@@ -495,9 +485,7 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
   </div>
 </div>
 
-<!-- ADMIN -->
 <div class="page" id="page-admin">
-  <!-- LOGIN -->
   <div id="adminLogin" class="login-overlay">
     <div class="login-card">
       <img src="Hadia-Product-Logo.jpg" class="login-logo" alt="Hadia Product" onerror="this.style.background='linear-gradient(135deg,#e91e8c,#f44336)';this.alt='H'">
@@ -509,7 +497,6 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
       <button class="g-btn" id="loginBtn" style="width:100%;padding:13px;font-size:15px" onclick="doLogin()">🔐 লগইন করুন</button>
     </div>
   </div>
-  <!-- PANEL -->
   <div id="adminPanel" style="display:none">
     <div class="adm-wrap">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
@@ -517,7 +504,6 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
         <button onclick="doLogout()" style="background:#fef2f2;border:1.5px solid #fca5a5;color:var(--err);padding:8px 16px;border-radius:20px;cursor:pointer;font-size:12px;font-weight:700">🚪 লগআউট</button>
       </div>
       <div style="background:#f0fdf4;border:1.5px solid #86efac;border-radius:10px;padding:10px 14px;font-size:12px;font-weight:600;color:#166534;margin-bottom:16px" id="fbStatus">✅ Supabase সংযুক্ত — সব ডেটা পার্মানেন্ট সেভ হচ্ছে</div>
-      <!-- Logo + BG -->
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px">
         <div style="background:var(--card);border:1.5px solid var(--bd);border-radius:14px;padding:16px;box-shadow:var(--sh)">
           <div style="font-size:13px;font-weight:700;color:var(--gray);margin-bottom:10px">🖼️ শপ লোগো আপলোড</div>
@@ -537,7 +523,6 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
         <button class="adm-tab" onclick="setAdmTab('ai',this)">🤖 AI ট্রেনিং</button>
       </div>
 
-      <!-- DASHBOARD -->
       <div class="adm-sec active" id="tab-dash">
         <div class="period-tabs"><button class="fb-btn act" onclick="setPeriod('today',this)">আজ</button><button class="fb-btn" onclick="setPeriod('week',this)">সাপ্তাহিক</button><button class="fb-btn" onclick="setPeriod('month',this)">মাসিক</button><button class="fb-btn" onclick="setPeriod('year',this)">বার্ষিক</button></div>
         <div class="dash-grid">
@@ -548,7 +533,6 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
         </div>
         <div class="chart-box"><div class="chart-ttl" id="chartTtl">📈 বিক্রির চার্ট</div><div class="chart-bars" id="chartBars"></div><div class="c-lbls" id="chartLbls"></div></div>
         <div class="chart-box"><div class="chart-ttl">🏆 শীর্ষ পণ্য</div><div id="topProds"></div></div>
-        <!-- Sync button -->
         <div style="background:#fffbeb;border:1.5px solid #fcd34d;border-radius:12px;padding:14px;margin-top:16px">
           <div style="font-size:13px;font-weight:700;margin-bottom:8px">🔄 PRODUCTS_DATA থেকে Supabase-এ সিঙ্ক</div>
           <div style="font-size:12px;color:var(--gray);margin-bottom:10px">HTML ফাইলের নিচে PRODUCTS_DATA-তে পণ্য লিখলে এই বাটন দিয়ে Supabase-এ সেভ করুন।</div>
@@ -556,7 +540,6 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
         </div>
       </div>
 
-      <!-- PRODUCTS -->
       <div class="adm-sec" id="tab-prods">
         <div class="pf">
           <h3 style="margin-bottom:18px;font-size:15px;font-weight:800">➕ নতুন পণ্য যোগ করুন</h3>
@@ -581,7 +564,6 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
           <button class="g-btn" id="addProdBtn" onclick="addProd()">✅ পণ্য যোগ করুন</button>
         </div>
 
-        <!-- JSON Bulk Import -->
         <div class="pf" style="margin-top:20px">
           <h3 style="margin-bottom:12px;font-size:15px;font-weight:800">📋 JSON থেকে একসাথে অনেক পণ্য যোগ করুন</h3>
           <div style="font-size:12px;color:var(--gray);margin-bottom:10px">নিচের format-এ JSON লিখুন বা PRODUCTS_DATA কপি করুন:</div>
@@ -595,10 +577,8 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
         <div style="margin-top:20px"><h3 style="margin-bottom:13px;font-size:15px;font-weight:800">📦 পণ্য তালিকা</h3><div id="admProdList"></div></div>
       </div>
 
-      <!-- ORDERS -->
       <div class="adm-sec" id="tab-orders"><div id="admOrders"></div></div>
 
-      <!-- CATEGORIES -->
       <div class="adm-sec" id="tab-cats">
         <div class="pf" style="margin-bottom:18px">
           <h3 style="margin-bottom:15px;font-size:15px;font-weight:800">➕ নতুন ক্যাটাগরি</h3>
@@ -612,10 +592,8 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
         <div id="admCatList"></div>
       </div>
 
-      <!-- REVIEWS -->
       <div class="adm-sec" id="tab-rvs"><div id="admRvs"></div></div>
 
-      <!-- AI TRAINING -->
       <div class="adm-sec" id="tab-ai">
         <div class="pf">
           <h3 style="margin-bottom:10px;font-size:15px;font-weight:800">🤖 AI ট্রেনিং — কাস্টম প্রশ্ন ও উত্তর</h3>
@@ -630,7 +608,6 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
   </div>
 </div>
 
-<!-- SUCCESS -->
 <div class="page" id="page-success">
   <div class="succ-wrap">
     <div style="font-size:70px;margin-bottom:16px">🎉</div>
@@ -642,7 +619,6 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
   </div>
 </div>
 
-<!-- WA FLOAT -->
 <div class="wa-float">
   <div class="wa-tip" id="waTip"> </div>
   <div style="position:relative"><div class="wa-ring"></div>
@@ -652,7 +628,6 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
   </div>
 </div>
 
-<!-- AI FLOAT — Hadia Product AI Logo -->
 <div class="ai-float">
   <button class="ai-btn" onclick="toggleAI()">
     <img src="Hadia-Product-AI-Logo.png" alt="AI" onerror="this.style.display='none';this.parentElement.innerHTML='<span style=\'font-size:28px;font-weight:900;color:#fff;font-style:italic\'>H</span><span style=\'position:absolute;bottom:2px;right:2px;background:#fff;color:var(--pk);font-size:8px;font-weight:800;padding:1px 4px;border-radius:6px\'>AI</span>'">
@@ -679,7 +654,6 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 <div class="toast" id="toast"></div>
 <div class="modal-ov" id="editCatMod"><div class="modal"><button class="modal-cls" onclick="closeMod('editCatMod')">✕</button><h2>ক্যাটাগরি এডিট</h2><div class="fg"><label>নাম</label><input type="text" id="ecNm"></div><div class="fg"><label>ইমোজি</label><input type="text" id="ecEmoji" maxlength="2"></div><input type="hidden" id="ecIdx"><button class="g-btn g-btn-sm" onclick="saveEditCat()">সেভ করুন</button></div></div>
 
-<!-- PRODUCT EDIT MODAL -->
 <div class="modal-ov" id="editProdMod" style="align-items:flex-start;overflow-y:auto;padding:20px">
   <div class="modal" style="max-width:560px;width:100%;max-height:90vh;overflow-y:auto;margin:auto">
     <button class="modal-cls" onclick="closeMod('editProdMod')">✕</button>
@@ -730,7 +704,6 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
   <div class="foot-copy-wrap"><div class="foot-copy">© 2025 HADIA PRODUCT · সর্বস্বত্ব সংরক্ষিত</div></div>
 </footer>
 
-<!-- ============================== MAIN SCRIPT ============================== -->
 <script>
 // ===== SUPABASE BRIDGE =====
 let fb=null,currentUser=null;
@@ -1015,7 +988,12 @@ async function uploadLogo(inp){const f=inp.files[0];if(!f)return;showToast('⏳ 
 async function setHeroBg(inp){const f=inp.files[0];if(!f)return;const r=new FileReader();r.onload=async e=>{const url=e.target.result;document.getElementById('heroBg').style.backgroundImage=`url(${url})`;try{const base64=url.split(',')[1];const byteArr=Uint8Array.from(atob(base64),c=>c.charCodeAt(0));const{data,error}=await _supa.storage.from('assets').upload('heroBg',new Blob([byteArr],{type:f.type}),{upsert:true});if(!error){const{data:pub}=_supa.storage.from('assets').getPublicUrl('heroBg');await _supa.from('settings').upsert({key:'heroBg',value:pub.publicUrl},{onConflict:'key'});showToast('✅ ব্যাকগ্রাউন্ড সেভ!');}else{await _supa.from('settings').upsert({key:'heroBg',value:url},{onConflict:'key'});showToast('✅ পরিবর্তন হয়েছে');}}catch(err){showToast('✅ পরিবর্তন হয়েছে');}};r.readAsDataURL(f);}
 
 // ===== CATEGORIES =====
-function renderCats(){document.getElementById('catGrid').innerHTML=cats.map(c=>`<div class="cat-card" onclick="goToCat('${c.nm}')"><div class="cat-icon">${c.emoji}</div><div class="cat-nm">${c.nm}</div></div>`).join('');}
+function renderCats(){
+  document.getElementById('catGrid').innerHTML = cats.map(c => {
+    const enc = encodeURIComponent(c.nm);
+    return `<div class="cat-card" data-cat="${enc}" onclick="goToCat(decodeURIComponent(this.dataset.cat))"><div class="cat-icon">${c.emoji}</div><div class="cat-nm">${c.nm}</div></div>`;
+  }).join('');
+}
 function goToCat(nm){
   curCat=(nm||'').trim();
   showPg('shop');setNav(document.querySelectorAll('nav button')[1]);
@@ -1536,13 +1514,6 @@ function init(){
 init();
 </script>
 
-<!-- ================================================================
-     📦 পণ্যের ডেটা সেকশন — এখানে পণ্য যোগ করুন
-     ================================================================
-     ✅ এই ফাইলের একদম নিচে আপনার পণ্যগুলো যোগ করুন।
-     ✅ Supabase চালু থাকলে অ্যাডমিন → ড্যাশবোর্ড → "সিঙ্ক" বাটন চাপুন।
-     ✅ Supabase ছাড়াও সাইট কাজ করবে এই ডেটা দিয়ে।
-     ================================================================ -->
 <script>
 const PRODUCTS_DATA = [
   // ════════════════════════════════
@@ -1577,10 +1548,6 @@ const PRODUCTS_DATA = [
 // ড্যাশবোর্ড → "PRODUCTS_DATA সিঙ্ক" বাটন চাপুন।
 </script>
 
-<!-- ===============================
-EDITABLE 30 PRODUCT TEMPLATE START
-আপনি নিচের অংশে সহজে পণ্য, ছবি, ভেরিয়েন্ট পরিবর্তন করতে পারবেন
-=============================== -->
 <script>
 window.PRODUCTS_DATA = window.PRODUCTS_DATA || [];
 if(PRODUCTS_DATA.length===0){
@@ -1608,7 +1575,6 @@ vars:[
 }
 }
 </script>
-<!-- EDITABLE 30 PRODUCT TEMPLATE END -->
 </body>
 
 </html>
