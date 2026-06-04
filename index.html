@@ -43,16 +43,19 @@ _supa.auth.onAuthStateChange((event, session) => {
   const lp = document.getElementById('adminLogin'), ap = document.getElementById('adminPanel');
   if (lp && ap) { lp.style.display = user ? 'none' : 'flex'; ap.style.display = user ? 'block' : 'none'; }
   const s = document.getElementById('fbStatus'); if (s) s.style.display = user ? 'block' : 'none';
-  // SIGNED_IN বা INITIAL_SESSION — দুটোতেই loadFromSupabase চালাও
-  // TOKEN_REFRESHED এ চালানো দরকার নেই (শুধু token নবায়ন)
-  if (user && (event === 'SIGNED_IN' || event === 'INITIAL_SESSION') && !_authLoaded) {
-    _authLoaded = true;
-    loadFromSupabase();
-  } else if (user && event === 'TOKEN_REFRESHED') {
-    // শুধু admin UI আপডেট করো, re-load করো না
-    renderAdmOrds && renderAdmOrds();
-    renderDash && renderDash();
-  } else if (!user) {
+
+  if (user) {
+    // SIGNED_IN = নতুন লগইন, INITIAL_SESSION = রিফ্রেশের পর session restore
+    // TOKEN_REFRESHED = token নবায়ন (শুধু render, data reload না)
+    if ((event === 'SIGNED_IN' || event === 'INITIAL_SESSION') && !_authLoaded) {
+      _authLoaded = true;
+      loadFromSupabase();
+    } else if (event === 'TOKEN_REFRESHED' && _authLoaded) {
+      renderAdmOrds && renderAdmOrds();
+      renderDash && renderDash();
+    }
+  } else {
+    // SIGNED_OUT বা session নেই
     _authLoaded = false;
   }
 });
@@ -1013,9 +1016,33 @@ async function setHeroBg(inp){const f=inp.files[0];if(!f)return;const r=new File
 
 // ===== CATEGORIES =====
 function renderCats(){document.getElementById('catGrid').innerHTML=cats.map(c=>`<div class="cat-card" onclick="goToCat('${c.nm}')"><div class="cat-icon">${c.emoji}</div><div class="cat-nm">${c.nm}</div></div>`).join('');}
-function goToCat(nm){curCat=nm.trim();showPg('shop');setNav(document.querySelectorAll('nav button')[1]);setTimeout(()=>{const catLower=curCat.toLowerCase();document.querySelectorAll('.filter-bar .fb-btn').forEach(b=>{b.classList.remove('act');if(b.textContent.trim().toLowerCase().includes(catLower))b.classList.add('act');});renderShop();},50);}
-function renderCatFilters(){document.getElementById('catFilters').innerHTML=cats.map(c=>`<button class="fb-btn" onclick="setCat('${c.nm}',this)">${c.emoji} ${c.nm}</button>`).join('');}
-function setCat(cat,el){curCat=cat;document.querySelectorAll('.filter-bar .fb-btn').forEach(b=>b.classList.remove('act'));if(el)el.classList.add('act');renderShop();}
+function goToCat(nm){
+  curCat=(nm||'').trim();
+  showPg('shop');setNav(document.querySelectorAll('nav button')[1]);
+  setTimeout(()=>{
+    const catN=normStr(curCat);
+    document.querySelectorAll('.filter-bar .fb-btn').forEach(b=>{
+      b.classList.remove('act');
+      const bc=decodeURIComponent(b.dataset.cat||'');
+      if(normStr(bc)===catN)b.classList.add('act');
+    });
+    renderShop();
+  },50);
+}
+function renderCatFilters(){
+  document.getElementById('catFilters').innerHTML=cats.map(c=>{
+    const enc=encodeURIComponent(c.nm);
+    return`<button class="fb-btn" data-cat="${enc}" onclick="setCatBtn(this)">${c.emoji} ${c.nm}</button>`;
+  }).join('');
+}
+function setCatBtn(el){setCat(decodeURIComponent(el.dataset.cat||'all'),el);}
+function setCat(cat,el){
+  curCat=cat||'all';
+  document.querySelectorAll('.filter-bar .fb-btn').forEach(b=>b.classList.remove('act'));
+  if(el){el.classList.add('act');}
+  else if(cat==='all'){document.getElementById('allFb')?.classList.add('act');}
+  renderShop();
+}
 function updCatSel(){const s=document.getElementById('pCat');if(!s)return;s.innerHTML=cats.map(c=>`<option value="${c.nm}">${c.emoji} ${c.nm}</option>`).join('');}
 
 // ===== PRODUCTS =====
@@ -1023,15 +1050,16 @@ function starHTML(rat){return'★'.repeat(Math.floor(rat))+'☆'.repeat(5-Math.f
 function renderFeat(){document.getElementById('featGrid').innerHTML=prods.filter(p=>p.feat).slice(0,4).map(prodCard).join('')||'<p style="color:var(--lgray);padding:20px">কোনো ফিচার্ড পণ্য নেই</p>';}
 function renderHomeShop(){const list=homeExp?prods:prods.slice(0,4);document.getElementById('homeShopGrid').innerHTML=list.map(prodCard).join('');document.getElementById('seeMoreBtn').textContent=homeExp?'↑ কম দেখুন':'আরো দেখুন ↓';}
 function toggleHomeShop(){homeExp=!homeExp;renderHomeShop();}
+// normalize: invisible chars + trim + lowercase
+const normStr=s=>(s||'').replace(/[\u00a0\u200b-\u200f\u202a-\u202e\ufeff]/g,'').trim().toLowerCase();
 function renderShop(){
   const q=document.getElementById('srchInp').value.trim();
   let list;
-  if(curCat==='all'){
+  if(!curCat||curCat==='all'){
     list=q?fuzzySearchProds(q):[...prods];
   } else {
-    // trim + lowercase match — whitespace বা case difference ঠিক করো
-    const catLower=curCat.trim().toLowerCase();
-    list=prods.filter(p=>(p.cat||'').trim().toLowerCase()===catLower);
+    const catN=normStr(curCat);
+    list=prods.filter(p=>normStr(p.cat)===catN);
     if(q){const fz=new Set(fuzzySearchProds(q).map(p=>p.id));list=list.filter(p=>fz.has(p.id));}
   }
   document.getElementById('shopGrid').innerHTML=list.length?list.map(prodCard).join(''):`<p style="color:var(--lgray);grid-column:1/-1;text-align:center;padding:50px;font-size:15px">😔 কোনো পণ্য পাওয়া যায়নি</p>`;
@@ -1498,26 +1526,11 @@ function addAIMsg(txt,cls,isHTML){const el=document.getElementById('aiMsgs');con
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.style.display='block';setTimeout(()=>t.style.display='none',2800);}
 
 // ===== INIT =====
-async function init(){
+function init(){
   renderCats();renderFeat();renderHomeShop();renderShop();renderCatFilters();updCart();
-  // ✅ Public data (login ছাড়াই পণ্য দেখা যাবে)
+  // ✅ Public data — login ছাড়াই পণ্য দেখা যাবে
+  // Admin session restore: onAuthStateChange এ INITIAL_SESSION event handle করা হয়েছে
   loadPublicData();
-  // ✅ রিফ্রেশের পরেও লগইন ধরে রাখো
-  // onAuthStateChange দেরিতে fire করে, তাই getSession দিয়ে আগেই চেক করো
-  try {
-    const { data: { session } } = await _supa.auth.getSession();
-    if (session && session.user && !_authLoaded) {
-      _authLoaded = true;
-      window._supaUser = session.user;
-      const lp = document.getElementById('adminLogin');
-      const ap = document.getElementById('adminPanel');
-      const s = document.getElementById('fbStatus');
-      if (lp) lp.style.display = 'none';
-      if (ap) ap.style.display = 'block';
-      if (s) s.style.display = 'block';
-      loadFromSupabase();
-    }
-  } catch(e) { console.error('getSession error:', e); }
 }
 
 init();
